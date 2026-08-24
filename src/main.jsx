@@ -1,0 +1,138 @@
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { ArrowUpRight, Menu, Play, Sparkles, Radio, Film, Gamepad2, Newspaper, Music2, Cpu } from 'lucide-react'
+import './styles.css'
+
+const capabilities = [
+  { title: 'Live broadcasting', text: 'Live events, sports and entertainment.', icon: Radio },
+  { title: 'AI solutions', text: 'Creative technology built for what comes next.', icon: Cpu },
+  { title: 'Movies', text: 'Original stories made to be experienced.', icon: Film },
+  { title: 'Gaming', text: 'Interactive entertainment and new worlds.', icon: Gamepad2 },
+  { title: 'News', text: 'Stories, culture and the moments that matter.', icon: Newspaper },
+  { title: 'Music', text: 'Artists, sounds and original experiences.', icon: Music2 },
+]
+
+const products = [
+  { name: 'Untoz+', type: 'Streaming & entertainment', description: 'The next generation of entertainment.' },
+  { name: 'Untoz Studio AI', type: 'Creative technology', description: 'AI-powered tools for modern creators.' },
+  { name: 'Untoz Universe', type: 'Digital ecosystem', description: 'Everything Untoz, connected.' },
+]
+
+const projects = [
+  { number: '01', title: 'Untoz+', label: 'Launching 2026', description: 'A new home for entertainment.' },
+  { number: '02', title: 'Untoz Studio AI', label: 'In development', description: 'Building the future of creative production.' },
+  { number: '03', title: 'Untoz Productions', label: 'Originals', description: 'Stories created from the ground up.' },
+]
+
+function GlobalHeader() {
+  return (
+    <div className="global-header">
+      <a className="global-brand" href="#top">UNTOZ</a>
+      <nav className="global-nav" aria-label="Global navigation">
+        <a href="#products">UNTOZ+</a>
+        <a href="#productions">NEWS</a>
+        <a href="#productions">SPORTS</a>
+        <a href="#products">GAMING</a>
+        <button type="button" className="global-more">MORE <span>+</span></button>
+      </nav>
+      <button className="global-menu" type="button" aria-label="Open menu"><Menu size={18} /></button>
+    </div>
+  )
+}
+
+function SiteHeader() {
+  return (
+    <header className="site-header">
+      <a className="site-logo" href="#top" aria-label="Untoz home">UNTOZ<span>®</span></a>
+      <nav className="site-nav" aria-label="Untoz navigation">
+        <a href="#about">About</a>
+        <a href="#products">Products</a>
+        <a href="#productions">Productions</a>
+        <a href="#projects">Projects</a>
+        <a href="#news">News</a>
+      </nav>
+      <a className="outline-button" href="#contact">Contact <ArrowUpRight size={15} /></a>
+    </header>
+  )
+}
+
+function App() {
+  return (
+    <div id="top" className="app">
+      <GlobalHeader />
+      <SiteHeader />
+
+      <main>
+        <section className="hero section-pad">
+          <div className="hero-copy">
+            <p className="eyebrow"><span className="eyebrow-dot" /> Untoz / 2026</p>
+            <h1>We create<br /><em>what's next.</em></h1>
+            <p className="hero-description">Media, technology and entertainment — built for everyone.</p>
+            <div className="hero-actions">
+              <a className="primary-button" href="#about">Explore Untoz <ArrowUpRight size={16} /></a>
+              <a className="text-link" href="#productions"><Play size={15} fill="currentColor" /> See our productions</a>
+            </div>
+          </div>
+          <div className="hero-art" aria-label="Untoz visual placeholder">
+            <div className="hero-orbit orbit-one" />
+            <div className="hero-orbit orbit-two" />
+            <div className="hero-core">U</div>
+            <div className="hero-art-label"><span>01</span> CREATE / CONNECT / EXPERIENCE</div>
+          </div>
+          <div className="hero-bottom"><span>SCROLL TO EXPLORE</span><span className="hero-line" /></div>
+        </section>
+
+        <section id="about" className="about section-pad">
+          <div className="section-kicker">01 — WHAT WE DO</div>
+          <div className="about-heading"><h2>Everything we do.<br /><span>For everyone.</span></h2></div>
+          <div className="capability-grid">
+            {capabilities.map(({ title, text, icon: Icon }) => (
+              <article className="capability-card" key={title}>
+                <Icon size={21} strokeWidth={1.7} />
+                <div><h3>{title}</h3><p>{text}</p></div>
+                <ArrowUpRight className="card-arrow" size={17} />
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="products" className="products section-pad dark-section">
+          <div className="section-heading light-heading"><div><div className="section-kicker">02 — OUR PRODUCTS</div><h2>Built for<br /><span>what's next.</span></h2></div><p>Products and platforms designed to connect people with the things they love.</p></div>
+          <div className="product-list">
+            {products.map((product, index) => (
+              <article className="product-row" key={product.name}>
+                <span className="row-number">0{index + 1}</span><div><p className="product-type">{product.type}</p><h3>{product.name}</h3><p>{product.description}</p></div><ArrowUpRight size={22} />
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="productions" className="productions section-pad">
+          <div className="section-heading"><div><div className="section-kicker">03 — OUR PRODUCTIONS</div><h2>Stories worth<br /><span>experiencing.</span></h2></div><a className="text-link" href="#productions">View all productions <ArrowUpRight size={15} /></a></div>
+          <div className="production-feature"><div className="production-visual"><div className="visual-gradient" /><span>UNTOZ ORIGINAL</span><strong>COMING<br />SOON</strong></div><div className="production-meta"><span>FEATURED PRODUCTION / 2026</span><h3>Original stories.<br />Our way.</h3><p>From film and television to live experiences, we create productions designed to stay with you.</p><a className="primary-button" href="#projects">Explore productions <ArrowUpRight size={16} /></a></div></div>
+        </section>
+
+        <section id="projects" className="projects section-pad">
+          <div className="section-kicker">04 — OUR LATEST PROJECTS</div><h2>Always<br /><span>building.</span></h2>
+          <div className="project-list">
+            {projects.map(project => <article className="project-card" key={project.number}><span>{project.number}</span><div><p>{project.label}</p><h3>{project.title}</h3><p>{project.description}</p></div><ArrowUpRight size={20} /></article>)}
+          </div>
+        </section>
+
+        <section className="numbers section-pad"><div className="numbers-glow" /><div className="section-kicker">05 — BY THE NUMBERS</div><h2>We're just<br /><span>getting started.</span></h2><div className="stats"><div><strong>100<span>+</span></strong><p>Productions</p></div><div><strong>50<span>+</span></strong><p>Live broadcasts</p></div><div><strong>10M<span>+</span></strong><p>Views</p></div><div><strong>20<span>+</span></strong><p>Projects</p></div></div></section>
+
+        <section id="news" className="news section-pad"><div className="section-heading"><div><div className="section-kicker">06 — FROM UNTOZ</div><h2>Latest<br /><span>stories.</span></h2></div><a className="text-link" href="#news">Visit the newsroom <ArrowUpRight size={15} /></a></div><div className="news-grid"><article><span>COMPANY / AUG 2026</span><h3>A new chapter<br />for Untoz.</h3><a href="#news">Read story <ArrowUpRight size={14} /></a></article><article><span>PRODUCTS / AUG 2026</span><h3>Meet the future<br />of Untoz+.</h3><a href="#news">Read story <ArrowUpRight size={14} /></a></article><article><span>CREATION / JUL 2026</span><h3>Behind the<br />next production.</h3><a href="#news">Read story <ArrowUpRight size={14} /></a></article></div></section>
+
+        <section id="contact" className="cta section-pad"><Sparkles size={20} /><h2>There's more<br /><span>to Untoz.</span></h2><p>Explore the universe we're building.</p><a className="primary-button" href="#top">Explore Untoz <ArrowUpRight size={16} /></a></section>
+      </main>
+
+      <footer className="footer section-pad">
+        <div className="footer-top"><a className="footer-logo" href="#top">UNTOZ<span>®</span></a><p>Everything we do.<br />For everyone.</p></div>
+        <div className="footer-grid"><div><h4>Untoz</h4><a href="#about">About</a><a href="#projects">Projects</a><a href="#productions">Productions</a><a href="#news">News</a></div><div><h4>Products</h4><a href="#products">Untoz+</a><a href="#products">Untoz Studio AI</a><a href="#products">Untoz Universe</a></div><div><h4>Explore</h4><a href="#productions">Movies</a><a href="#products">Gaming</a><a href="#about">Music</a><a href="#about">Sports</a></div><div><h4>More</h4><a href="#contact">Contact</a><a href="#contact">Careers</a><a href="#contact">Press</a><a href="#contact">Support</a></div></div>
+        <div className="footer-bottom"><span>© 2026 Untoz. All rights reserved.</span><div><a href="#top">Privacy</a><a href="#top">Terms</a><a href="#top">Instagram</a><a href="#top">YouTube</a></div></div>
+      </footer>
+    </div>
+  )
+}
+
+createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>)
