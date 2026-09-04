@@ -40,7 +40,15 @@
     const renderResults=(query='')=>{
       const q=query.trim().toLowerCase();
       const matches=q?searchable.filter(([cat,title,text])=>`${cat} ${title} ${text}`.toLowerCase().includes(q)):searchable.slice(0,8);
-      results.innerHTML=matches.length?matches.map(([cat,title,text,href])=>`<a class="untoz-search-result" href="${href}"><small>${cat}</small><strong>${title}</strong><p>${text}</p></a>`).join(''):`<div class="untoz-search-empty">No results for “${query}”. Try another search.</div>`;
+      if(matches.length){
+        results.innerHTML=matches.map(([cat,title,text,href])=>`<a class="untoz-search-result" href="${href}"><small>${cat}</small><strong>${title}</strong><p>${text}</p></a>`).join('');
+      }else{
+        results.innerHTML='';
+        const empty=document.createElement('div');
+        empty.className='untoz-search-empty';
+        empty.textContent=`No results for “${query}”. Try another search.`;
+        results.appendChild(empty);
+      }
       results.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeSearch));
     };
     const openSearch=()=>{overlay.classList.add('is-open');document.body.style.overflow='hidden';renderResults();setTimeout(()=>input.focus(),40)};
