@@ -1,5 +1,21 @@
 (()=>{
   const plusUrl='https://untozplus.com';
+  const base='/untoz-site/';
+
+  /* Shared media-network configuration. Each future subsidiary can use the same shell with its own identity. */
+  const sites={
+    untoz:{name:'Untoz',path:'',accent:'#174cff'},
+    sports:{name:'Untoz Sports',path:'sports/',accent:'#19d38a'},
+    news:{name:'Untoz News',path:'news/',accent:'#ff3e63'},
+    gaming:{name:'Untoz Gaming',path:'gaming/',accent:'#9b6cff'},
+    music:{name:'Untoz Music',path:'music/',accent:'#ff4fb8'},
+    space:{name:'Untoz Space',path:'space/',accent:'#22d8ff'},
+    kids:{name:'Untoz Kids',path:'kids/',accent:'#ffd83d'},
+    archives:{name:'Untoz Archives',path:'archives/',accent:'#b0b5c0'},
+    pop:{name:'Untoz Pop',path:'pop/',accent:'#ff5f91'}
+  };
+  window.UntozSites=sites;
+
   const slides=[
     {k:'UNTOZ+ · NOW STREAMING',t:'Something unexpected is always on.',p:'Films, series, live TV, sports and events — all in one place.',a:'Open Untoz+',bg:'radial-gradient(circle at 70% 25%,rgba(255,216,61,.35),transparent 20%),linear-gradient(135deg,#10205b 0%,#41258e 52%,#b72778 115%)',accent:'#ffd83d'},
     {k:'NEW ON UNTOZ+',t:'Your next obsession is waiting.',p:'Discover new stories, old classics and everything worth pressing play for.',a:'Browse Untoz+',bg:'radial-gradient(circle at 65% 30%,rgba(255,80,140,.42),transparent 25%),linear-gradient(135deg,#24104a,#7b164e 58%,#f04f71)',accent:'#ff5f91'},
@@ -13,6 +29,7 @@
     ['House on Haunted Hill','1959 · HORROR','HAUNTED HILL','linear-gradient(145deg,#2c3859,#07090f)'],
     ['Plan 9 from Outer Space','1959 · SCI-FI','PLAN 9','linear-gradient(145deg,#172d54,#06090f)']
   ];
+
   function buildHero(){
     const art=document.querySelector('.hero-art'); if(!art||art.dataset.refreshDone)return;
     art.dataset.refreshDone='1'; art.innerHTML='';
@@ -30,6 +47,7 @@
     function restart(){clearInterval(timer);timer=setInterval(()=>go((current+1)%slides.length),6000)}
     carousel.addEventListener('mouseenter',()=>clearInterval(timer));carousel.addEventListener('mouseleave',restart);restart();
   }
+
   function buildPlusShowcase(){
     if(document.querySelector('.untoz-plus-showcase'))return;
     const watch=document.querySelector('#watch'); if(!watch)return;
@@ -38,6 +56,91 @@
     section.innerHTML=`<div class="plus-showcase-head"><div><div class="label">STREAM ON UNTOZ+</div><h2>What's on<br/><span>Untoz+.</span></h2></div><p class="plus-showcase-copy">A hand-picked look at what you can discover on Untoz+. Click any title to jump straight into the streaming platform.</p></div><div class="plus-content-row">${cards}</div><div class="plus-showcase-cta"><a href="${plusUrl}">Open Untoz+ <span>↗</span></a></div>`;
     watch.parentNode.insertBefore(section,watch);
   }
-  function boot(){buildHero();buildPlusShowcase()}
+
+  function renameProductsSection(){
+    const heading=document.querySelector('#universe .head h2');
+    if(!heading)return;
+    heading.innerHTML='Our Products<br/><span>Built for the future.</span>';
+  }
+
+  function buildFooter(){
+    const footer=document.querySelector('footer'); if(!footer||footer.dataset.networkFooter)return;
+    footer.dataset.networkFooter='1';
+    footer.innerHTML=`
+      <div>
+        <a class="logo" href="#top">untoz<sup>®</sup></a>
+        <p>Media. Technology. Entertainment.<br/>One universe. Many ways to experience it.</p>
+      </div>
+      <div class="footer-network">
+        <div class="footer-network-column footer-network-intro">
+          <b>The Untoz Universe</b>
+          <strong>Everything we make.<br/>All in one place.</strong>
+          <p>Explore our products, channels, productions, entertainment and creative worlds.</p>
+        </div>
+        <div class="footer-network-column">
+          <b>Products</b>
+          <a href="${plusUrl}">Untoz+</a>
+          <a href="${base}sports/">Untoz Sports</a>
+          <a href="${base}news/">Untoz News</a>
+          <a href="${base}gaming/">Untoz Gaming</a>
+          <a href="${base}music/">Untoz Music</a>
+          <a href="${base}space/">Untoz Space</a>
+          <a href="${base}kids/">Untoz Kids</a>
+        </div>
+        <div class="footer-network-column">
+          <b>Content</b>
+          <a href="#films">Films</a>
+          <a href="#watch">Live TV</a>
+          <a href="#projects">Live Events</a>
+          <a href="#projects">Documentaries</a>
+          <a href="#news">Originals</a>
+          <a href="#projects">Sports</a>
+          <a href="#top">Music</a>
+        </div>
+        <div class="footer-network-column">
+          <b>Channels & Worlds</b>
+          <a href="${base}sports/">Untoz Sports</a>
+          <a href="${base}news/">Untoz News</a>
+          <a href="${base}pop/">Untoz Pop</a>
+          <a href="${base}kids/">Untoz Kids</a>
+          <a href="${base}archives/">Untoz Archives</a>
+          <a href="${base}space/">Untoz Space</a>
+          <a href="#top">Untoz Fast</a>
+        </div>
+        <div class="footer-network-column">
+          <b>Productions</b>
+          <a href="#projects">Untoz Awards</a>
+          <a href="#projects">Untoz Fest</a>
+          <a href="#projects">Live Broadcasts</a>
+          <a href="#projects">Special Events</a>
+          <a href="#projects">Original Productions</a>
+          <a href="#projects">Untoz Motion AI</a>
+        </div>
+        <div class="footer-network-column">
+          <b>Untoz</b>
+          <a href="#about">About</a>
+          <a href="#services">What we do</a>
+          <a href="#contact">Contact</a>
+          <a href="#top">Careers</a>
+          <a href="#top">Press</a>
+          <a href="#top">X</a>
+          <a href="#top">YouTube</a>
+          <a href="#top">Instagram</a>
+        </div>
+      </div>
+      <div class="foot-bottom"><span>© 2026 Untoz. All rights reserved.</span><span>WELCOME TO THE UNTOZ UNIVERSE.</span></div>`;
+  }
+
+  function applySiteShell(){
+    /* The root site is intentionally the default. Later /sports/, /news/, etc. can reuse this shell and swap identity/content. */
+    const path=location.pathname.toLowerCase();
+    let key='untoz';
+    Object.keys(sites).forEach(k=>{if(k!=='untoz'&&path.includes('/'+sites[k].path.replace('/',''))){key=k}});
+    document.body.dataset.untozSite=key;
+    document.body.classList.add('untoz-'+key);
+    document.documentElement.style.setProperty('--site-accent',sites[key].accent);
+  }
+
+  function boot(){applySiteShell();buildHero();buildPlusShowcase();renameProductsSection();buildFooter()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
