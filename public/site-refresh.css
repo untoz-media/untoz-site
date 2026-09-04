@@ -51,5 +51,48 @@ body,button,input,textarea{font-family:var(--site-font)!important}
 .plus-showcase-cta a{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:5px;background:#174cff;color:#fff;font-size:10px;font-weight:800;text-decoration:none;transition:.2s}
 .plus-showcase-cta a:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(23,76,255,.28)}
 
-@media(max-width:1050px){.plus-content-row{grid-template-columns:repeat(3,1fr)}.plus-content-card:nth-child(n+4){display:none}.hero-slide{padding:28px}.hero-shape{width:250px;height:250px}}
-@media(max-width:700px){.hero-art{min-height:310px}.hero-carousel{inset:8px 0 0}.hero-slide{padding:22px}.hero-slide h3{font-size:34px}.hero-slide p{font-size:10px;max-width:290px}.hero-shape{width:190px;height:190px;right:-55px;top:-45px}.hero-mark{right:20px;top:20px}.hero-dots{right:18px;bottom:18px}.hero-counter{right:18px;bottom:37px}.plus-showcase-head{display:block}.plus-showcase-copy{margin-top:14px}.plus-content-row{grid-template-columns:repeat(2,1fr);gap:9px}.plus-content-card:nth-child(n+5){display:none}.untoz-plus-showcase{padding:62px 20px 60px}.plus-poster-title{font-size:21px}}
+/* One visual language for Products / Projects / News */
+.products,.projects,.news{align-items:start}
+.product,.project,.news article{min-width:0}
+.product{overflow:hidden}
+.product-top{position:absolute;z-index:6;top:0;left:0;right:0;height:44px;padding:0 14px;background:linear-gradient(180deg,rgba(0,0,0,.52),transparent);color:rgba(255,255,255,.72)}
+.product-shape,.project-art,.news-art{height:180px!important;min-height:180px!important;width:100%;border-radius:12px!important;overflow:hidden;position:relative}
+.product-shape{flex:none;margin:0;background:var(--tone);border-radius:12px!important}
+.product-shape:after,.project-art:before,.news-art:before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 40%,rgba(0,0,0,.58));pointer-events:none}
+.product-shape .product-icon{position:relative;z-index:2;width:40px;height:40px}
+.product>small:not(.product-top small){margin-top:14px}
+.project-art{border-radius:12px!important}
+.project-copy{padding:11px 3px 0}
+.project-copy h3{font-family:var(--site-font)!important;font-weight:700}
+.news article{display:block}
+.news-art{border:1px solid var(--line);margin-bottom:12px;display:grid;place-items:center;background:#10131d!important}
+.news-art b,.news-art svg{position:relative;z-index:2}
+.news article h3{font-family:var(--site-font)!important;font-weight:700}
+
+/* Large media-network footer */
+footer{position:relative;padding:72px 5.7vw 24px!important;background:#030407;border-top:1px solid rgba(255,255,255,.1)!important;color:#fff!important;overflow:hidden}
+footer:before{content:'UNTOZ';position:absolute;right:-2vw;bottom:15px;font:900 clamp(110px,18vw,280px)/.7 Montserrat;letter-spacing:-.11em;color:rgba(255,255,255,.025);pointer-events:none}
+footer>div:first-child{position:relative;z-index:2;max-width:300px}
+footer .logo{font-family:var(--site-font)!important;font-weight:900}
+footer .logo:after{background:linear-gradient(90deg,#19d38a,#ffd83d,#174cff)}
+footer>div:first-child p{font-size:11px;line-height:1.55;color:#858b98;margin-top:18px}
+.footer-network{position:relative;z-index:2;margin-top:52px;padding-top:32px;border-top:1px solid rgba(255,255,255,.09);display:grid;grid-template-columns:1.35fr repeat(4,1fr);gap:30px}
+.footer-network-column{display:flex;flex-direction:column;gap:9px}
+.footer-network-column b{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#6f86ff;margin-bottom:5px}
+.footer-network-column a{font-size:11px;color:#9ba1ad;transition:.18s}
+.footer-network-column a:hover{color:#fff;transform:translateX(2px)}
+.footer-network-intro strong{font:800 25px/.95 Montserrat;letter-spacing:-.055em;max-width:240px}
+.footer-network-intro p{font-size:10px!important;color:#737a87!important;max-width:230px;margin:12px 0 0!important}
+.foot-bottom{position:relative;z-index:2;margin-top:52px!important;padding-top:18px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:20px;color:#656b77;font-size:8px!important;letter-spacing:.08em;text-transform:uppercase}
+
+/* Future subsidiary pages: same shell, different identity */
+[data-untoz-site]{--site-accent:#174cff}
+body.untoz-sports{--site-accent:#19d38a}
+body.untoz-news{--site-accent:#ff3e63}
+body.untoz-gaming{--site-accent:#9b6cff}
+body.untoz-music{--site-accent:#ff4fb8}
+body.untoz-space{--site-accent:#22d8ff}
+body.untoz-kids{--site-accent:#ffd83d}
+
+@media(max-width:1050px){.plus-content-row{grid-template-columns:repeat(3,1fr)}.plus-content-card:nth-child(n+4){display:none}.hero-slide{padding:28px}.hero-shape{width:250px;height:250px}.footer-network{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.hero-art{min-height:310px}.hero-carousel{inset:8px 0 0}.hero-slide{padding:22px}.hero-slide h3{font-size:34px}.hero-slide p{font-size:10px;max-width:290px}.hero-shape{width:190px;height:190px;right:-55px;top:-45px}.hero-mark{right:20px;top:20px}.hero-dots{right:18px;bottom:18px}.hero-counter{right:18px;bottom:37px}.plus-showcase-head{display:block}.plus-showcase-copy{margin-top:14px}.plus-content-row{grid-template-columns:repeat(2,1fr);gap:9px}.plus-content-card:nth-child(n+5){display:none}.untoz-plus-showcase{padding:62px 20px 60px}.plus-poster-title{font-size:21px}.product-shape,.project-art,.news-art{height:150px!important;min-height:150px!important}.footer-network{grid-template-columns:repeat(2,1fr);gap:28px 18px}.footer-network-intro{grid-column:1/-1}.foot-bottom{display:block}.foot-bottom span{display:block;margin-top:7px}}
