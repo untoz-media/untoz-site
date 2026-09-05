@@ -1,0 +1,75 @@
+/* Untoz portal polish: theme switching, search, breaking bar, footer and cleanup. */
+
+/* Theme tokens */
+body{--portal-bg:#ecece8;--portal-surface:#fff;--portal-card:#f5f5f1;--portal-text:#111;--portal-muted:#666;--portal-line:#deded8;--portal-header:#fff;background:var(--portal-bg);color:var(--portal-text);transition:background .2s ease,color .2s ease}
+body.theme-dark{--portal-bg:#0b0d11;--portal-surface:#12151b;--portal-card:#181c23;--portal-text:#f5f6f8;--portal-muted:#a1a7b0;--portal-line:#292e37;--portal-header:#11141a}
+body.theme-dark .portal-page{background:var(--portal-bg);color:var(--portal-text)}
+body.theme-dark .portal-shell{background:var(--portal-surface);border-color:var(--portal-line);box-shadow:0 14px 45px rgba(0,0,0,.35)}
+body.theme-dark .media-header{background:var(--portal-header);border-color:var(--portal-line)}
+body.theme-dark .media-header-top{border-color:var(--portal-line)}
+body.theme-dark .portal-logo,body.theme-dark .media-header nav a,body.theme-dark .media-subnav span{color:#f5f6f8}
+body.theme-dark .media-subnav a{color:#a1a7b0}
+body.theme-dark .media-header nav a:hover{background:#1b1f27}
+body.theme-dark .media-tools button{color:#f5f6f8}
+body.theme-dark .portal-hero{background:#101319}
+body.theme-dark .hero-window{background:#181c23}
+body.theme-dark .portal-section-head{border-color:var(--portal-line)}
+body.theme-dark .portal-section-head h2,body.theme-dark .portal-section-head a{color:var(--portal-text)}
+body.theme-dark .media-card,body.theme-dark .poster,body.theme-dark .production-strip a,body.theme-dark .sport-list a,body.theme-dark .video-list a,body.theme-dark .calendar-rows a{color:var(--portal-text)}
+body.theme-dark .media-card-body small,body.theme-dark .poster small,body.theme-dark .production-strip small,body.theme-dark .sport-list small,body.theme-dark .video-list small,body.theme-dark .calendar-rows small{color:var(--portal-muted)}
+body.theme-dark .media-card-body p{color:var(--portal-muted)}
+body.theme-dark .media-image.blue{background:#172b52}body.theme-dark .media-image.green{background:#123b25}body.theme-dark .media-image.orange{background:#4a2a12}body.theme-dark .media-image.yellow{background:#493d08}body.theme-dark .media-image.black{background:#08090b}
+body.theme-dark .poster-art.p0{background:#172b52}body.theme-dark .poster-art.p1{background:#4a2a12}body.theme-dark .poster-art.p2{background:#24272d}body.theme-dark .poster-art.p3{background:#173a22}body.theme-dark .poster-art.p4{background:#49400d}
+body.theme-dark .now-card{background:#181c23;border-color:var(--portal-line);color:var(--portal-text)}
+body.theme-dark .now-card h3,body.theme-dark .now-card>svg{color:var(--portal-text)}
+body.theme-dark .now-card p{color:var(--portal-muted)}
+body.theme-dark .now-card:first-of-type{background:#172642;border-color:#263b64}body.theme-dark .now-card:last-of-type{background:#163022;border-color:#294b35}
+body.theme-dark .music-banner{background:#07090c}body.theme-dark .video-stage{background:#080a0e}body.theme-dark .video-list a{border-color:var(--portal-line);background:#151920}body.theme-dark .video-list a:hover{background:#1c2129}body.theme-dark .video-list strong{color:#fff}body.theme-dark .video-thumb{background:#242a33;color:#fff}
+body.theme-dark .untozplus-section{background:#171c24}body.theme-dark .untozplus-section p{color:var(--portal-muted)}
+body.theme-dark .channel-screen{background:#1a1e25}body.theme-dark .live-channel>div+div strong{color:#f5f6f8}
+body.theme-dark .calendar-rows{border-color:var(--portal-line)}body.theme-dark .calendar-rows a{border-color:var(--portal-line)}
+body.theme-dark .universe-banner{background:#080a0e}body.theme-dark .universe-banner p{color:#a1a7b0}
+body.theme-dark .contact-strip{border-color:var(--portal-line)}body.theme-dark .contact-strip>a{border-color:#4a505a;color:#fff}
+body.theme-dark .media-footer{background:#07090d}
+
+/* Theme button */
+.media-tools button[aria-label*="mode"]{width:34px;height:34px;border:1px solid var(--portal-line);border-radius:9px;display:grid;place-items:center;color:var(--portal-text);background:var(--portal-card);transition:.18s ease}
+.media-tools button[aria-label*="mode"]:hover{transform:translateY(-1px);background:var(--portal-text);color:var(--portal-surface)}
+
+/* Search modal — large editorial search experience */
+.site-search-modal{position:fixed;inset:0;z-index:2000;display:grid;place-items:start center;padding-top:13vh}
+.site-search-backdrop{position:absolute;inset:0;background:rgba(8,10,14,.62);backdrop-filter:blur(10px)}
+.site-search-box{position:relative;width:min(760px,calc(100% - 32px));padding:34px;border:1px solid rgba(255,255,255,.18);border-radius:24px;background:#fff;color:#111;box-shadow:0 30px 90px rgba(0,0,0,.3);z-index:1;animation:search-in .18s ease-out}
+.site-search-box label{display:block;font-size:10px;font-weight:900;letter-spacing:.16em;color:#777;margin-bottom:12px}
+.site-search-input{height:68px;display:flex;align-items:center;gap:14px;border:2px solid #111;border-radius:14px;padding:0 20px;background:#fafaf7}
+.site-search-input svg{flex:0 0 auto}.site-search-input input{width:100%;border:0;outline:0;background:transparent;color:#111;font-size:20px;font-weight:600}.site-search-input input::placeholder{color:#9a9a94}
+.site-search-box p{margin:13px 2px 0;color:#777;font-size:11px;line-height:1.5}.site-search-close{position:absolute;right:18px;top:16px;width:34px;height:34px;border:0;border-radius:50%;background:#eee;color:#111;font-size:22px;line-height:1;cursor:pointer}.site-search-close:hover{background:#ddd}
+body.theme-dark .site-search-box{background:#151920;color:#f5f6f8;border-color:#343a45}body.theme-dark .site-search-box label,body.theme-dark .site-search-box p{color:#9da4ae}body.theme-dark .site-search-input{background:#0d1015;border-color:#f5f6f8}body.theme-dark .site-search-input input{color:#fff}body.theme-dark .site-search-input input::placeholder{color:#666d77}body.theme-dark .site-search-close{background:#292e36;color:#fff}
+@keyframes search-in{from{opacity:0;transform:translateY(-10px) scale(.98)}to{opacity:1;transform:none}}
+
+/* Cleaner UNTOZ NOW ticker */
+.breaking{display:flex!important;align-items:center;gap:12px!important;min-height:52px;padding:8px 18px!important;background:#111!important;color:#fff;border:0!important;border-radius:0!important}
+.breaking>strong{flex:0 0 auto;background:var(--u-green,#0CDB46);color:#111;padding:7px 10px;border-radius:5px;font-size:9px;letter-spacing:.08em}
+.breaking>div{display:flex;align-items:center;gap:8px;min-width:0}
+.breaking>div:first-of-type{flex:1}
+.breaking>div:last-of-type{padding-left:12px;border-left:1px solid #3a3a3a}
+.breaking span{background:none!important;padding:0!important;color:#888!important;font-size:8px!important;letter-spacing:.12em}
+.breaking a{color:#fff!important;font-size:10px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.breaking>svg{display:none}
+.breaking>div:last-of-type a{color:#b7b7b0!important}
+
+/* Remove the old About section entirely */
+.about-strip{display:none!important}
+.media-footer a[href="#about"]{display:none!important}
+
+/* Give the footer more presence */
+.media-footer{margin-top:38px!important;padding:58px 34px 24px!important}
+.footer-top{padding-bottom:50px!important;gap:42px!important}
+.media-footer .portal-logo{font-size:36px}
+.media-footer p{max-width:300px;font-size:11px;line-height:1.65}
+.footer-top>div:not(:first-child){gap:10px!important}
+.footer-top b{font-size:9px;margin-bottom:7px}
+.footer-top a{font-size:10px}
+.footer-bottom{padding-top:18px!important;min-height:34px}
+
+@media(max-width:650px){.site-search-modal{padding-top:8vh}.site-search-box{padding:28px 20px 24px;border-radius:18px}.site-search-input{height:58px;padding:0 15px}.site-search-input input{font-size:17px}.breaking{gap:9px!important}.breaking>div:last-of-type{display:none}.media-footer{padding:48px 22px 22px!important}.footer-top{padding-bottom:38px!important}}
