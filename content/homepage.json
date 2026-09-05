@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "blocks": [
+    {"id":"hero-1","type":"hero","props":{"title":"Untoz","subtitle":"Media, entertainment and technology.","cta":"Explore Untoz+"}},
+    {"id":"news-1","type":"post-grid","props":{"title":"Latest News","source":"latest","limit":6}},
+    {"id":"plus-1","type":"cta","props":{"title":"Untoz+","subtitle":"Stream movies, series, live TV, sports and events.","button":"Open Untoz+"}}
+  ]
+}
