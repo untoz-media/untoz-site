@@ -5,7 +5,7 @@
     if(!global) return;
     const header=document.createElement('header');
     header.className='untoz-site-header';
-    header.innerHTML=`<a class="untoz-site-header__logo" href="#top">untoz<sup>®</sup></a><nav class="untoz-site-header__nav" aria-label="Untoz site navigation"><a href="#top">Home</a><a href="#universe">Products</a><a href="#services">Services</a><a href="#projects">Projects</a><a href="#news">News</a><a href="#about">About</a><a href="#contact">Contact</a></nav><div class="untoz-site-header__actions"><button class="search" type="button" aria-label="Search">⌕</button><button class="theme" type="button" aria-label="Toggle theme">☼</button><a class="untoz-site-header__live" href="#watch">●&nbsp; Watch Live</a><button class="untoz-site-header__mobile" type="button" aria-label="Open menu">☰</button></div>`;
+    header.innerHTML=`<a class="untoz-site-header__logo" href="#top" aria-label="Untoz home">untoz<sup>®</sup></a><nav class="untoz-site-header__nav" aria-label="Untoz site navigation"><a href="#top">Home</a><a href="#news">News</a><a href="#sports">Sports</a><a href="#entertainment">Entertainment</a><a href="#movies">Movies & Series</a><a href="#productions">Productions</a><a href="#gaming">Gaming</a><a href="#music">Music</a><a href="#videos">Videos</a><a href="#live">Live</a><a href="#more">More</a></nav><div class="untoz-site-header__actions"><button class="search" type="button" aria-label="Search">⌕</button><button class="theme" type="button" aria-label="Toggle theme">☼</button><a class="untoz-site-header__live" href="#live">●&nbsp; Watch Live</a><button class="untoz-site-header__mobile" type="button" aria-label="Open menu">☰</button></div>`;
     global.insertAdjacentElement('afterend',header);
 
     const search=header.querySelector('.search');
@@ -16,25 +16,20 @@
     const input=overlay.querySelector('.untoz-search-input');
     const results=overlay.querySelector('.untoz-search-results');
     const searchable=[
-      ['Products','Untoz+','Streaming, live TV, films, series, sports and events.','#universe'],
-      ['Products','Untoz Sports','Live sport, highlights, analysis and original coverage.','#universe'],
-      ['Products','Untoz News','Fast coverage of the stories that matter.','#universe'],
-      ['Products','Untoz Gaming','Games, creators, streams and everything happening in gaming.','#universe'],
-      ['Products','Untoz Music','Music discovery, performances and original content.','#universe'],
-      ['Products','Untoz Space','Spaceflight, science and the universe through Untoz.','#universe'],
-      ['Services','Live Broadcasting','We broadcast your event to the world with professional quality.','#services'],
-      ['Services','Video Production','From concept to final cut. We create stunning videos that tell your story.','#services'],
-      ['Services','Streaming Solutions','Multi-platform streaming, 24/7 channels and custom solutions.','#services'],
-      ['Services','News Coverage','Fast, accurate and reliable news from everywhere.','#services'],
-      ['Services','Sports Media','Live sports, highlights, analysis and original coverage.','#services'],
-      ['Services','Creative Technology','Tools and experiences built for the future of media.','#services'],
-      ['Watch','Untoz Fast','Non-stop entertainment, music, clips and unexpected moments.','#watch'],
-      ['Films','His Girl Friday','1940 · Comedy','#films'],
-      ['Films','D.O.A.','1949 · Noir','#films'],
-      ['Films','The Little Shop of Horrors','1960 · Horror','#films'],
-      ['Films','House on Haunted Hill','1959 · Horror','#films'],
-      ['Films','Plan 9 from Outer Space','1959 · Sci-Fi','#films'],
-      ['Company','About Untoz','Media, technology and entertainment — built for the world.','#about'],
+      ['News','Untoz+ is now streaming','The latest stories from the Untoz universe.','#news'],
+      ['Entertainment','The Untoz Awards are heading to Dubai','Everything you need to know about the next edition.','#entertainment'],
+      ['Sports','The latest from Untoz Sports','Live coverage, results and highlights.','#sports'],
+      ['Movies & Series','His Girl Friday','1940 · Comedy','#movies'],
+      ['Movies & Series','D.O.A.','1949 · Noir','#movies'],
+      ['Movies & Series','The Little Shop of Horrors','1960 · Horror','#movies'],
+      ['Gaming','What is happening in gaming','News, releases and culture from gaming.','#gaming'],
+      ['Music','Listen with Untoz Music','Music discovery, playlists and stories.','#music'],
+      ['Watch','Videos','Watch stories, features and Untoz productions.','#videos'],
+      ['Watch','Untoz Live','Live events, broadcasts and special coverage.','#live'],
+      ['Watch','Untoz+','Movies, series, live TV and events.','#untozplus'],
+      ['Untoz','Productions','Original productions from across the Untoz universe.','#productions'],
+      ['Untoz','The Untoz Universe','Channels, projects, productions, products and worlds.','#more'],
+      ['Company','About Untoz','Media, entertainment and technology.','#about'],
       ['Company','Contact','Got an idea? Let’s make it.','#contact']
     ];
     const renderResults=(query='')=>{
@@ -54,7 +49,7 @@
     const theme=header.querySelector('.theme');
     theme.addEventListener('click',()=>{const dark=document.documentElement.dataset.theme!=='light';document.documentElement.dataset.theme=dark?'light':'dark';theme.textContent=dark?'☾':'☼'});
     const mobile=header.querySelector('.untoz-site-header__mobile');
-    mobile.addEventListener('click',()=>{let nav=header.querySelector('.untoz-site-header__mobile-nav');if(nav){nav.remove();mobile.textContent='☰';return}nav=document.createElement('nav');nav.className='untoz-site-header__mobile-nav';nav.innerHTML='<a href="#top">Home</a><a href="#universe">Products</a><a href="#services">Services</a><a href="#projects">Projects</a><a href="#news">News</a><a href="#about">About</a><a href="#contact">Contact</a>';header.appendChild(nav);mobile.textContent='✕'});
+    mobile.addEventListener('click',()=>{let nav=header.querySelector('.untoz-site-header__mobile-nav');if(nav){nav.remove();mobile.textContent='☰';return}nav=document.createElement('nav');nav.className='untoz-site-header__mobile-nav';nav.innerHTML='<a href="#top">Home</a><a href="#news">News</a><a href="#sports">Sports</a><a href="#entertainment">Entertainment</a><a href="#movies">Movies & Series</a><a href="#productions">Productions</a><a href="#gaming">Gaming</a><a href="#music">Music</a><a href="#videos">Videos</a><a href="#live">Live</a><a href="#more">More</a>';header.appendChild(nav);mobile.textContent='✕'});
   };
   const boot=()=>{init();if(!document.querySelector('.untoz-site-header'))setTimeout(boot,80)};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
