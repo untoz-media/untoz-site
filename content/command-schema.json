@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "description": "Content contract used by Untoz Command and the public Untoz site.",
+  "collections": {
+    "posts": "content/posts/*.md",
+    "pages": "content/pages/*.json",
+    "categories": "content/categories.json",
+    "genres": "content/genres.json",
+    "homepage": "content/homepage.json",
+    "site": "content/site.json"
+  },
+  "post": {
+    "required": ["title", "slug", "status", "category", "author", "date", "content"],
+    "statuses": ["Draft", "Published"],
+    "fields": ["title", "slug", "excerpt", "image", "content", "category", "genre", "author", "date", "status", "seo"]
+  },
+  "page": {
+    "required": ["title", "slug", "status"],
+    "statuses": ["Draft", "Published"],
+    "fields": ["title", "slug", "content", "status", "seo"]
+  },
+  "homepage": {
+    "blockTypes": ["Hero", "Section", "News Grid", "Featured Post", "Video", "Image", "Text", "CTA", "Carousel", "Post Grid", "Live Player", "Spacer"]
+  }
+}
