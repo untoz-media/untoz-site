@@ -1,0 +1,35 @@
+[
+  {
+    "title": "Untoz+ is now streaming",
+    "slug": "untoz-plus-launch",
+    "category": "News",
+    "status": "Published",
+    "author": "Untoz",
+    "date": "2026-08-12",
+    "excerpt": "A new home for entertainment, live events and stories across the Untoz universe.",
+    "image": "",
+    "seo": "Untoz+ is now streaming movies, series, live TV, sports and events."
+  },
+  {
+    "title": "The Untoz Awards are heading to Dubai",
+    "slug": "untoz-awards-dubai",
+    "category": "Entertainment",
+    "status": "Published",
+    "author": "Untoz",
+    "date": "2026-08-12",
+    "excerpt": "Everything you need to know about the next edition of the Untoz Awards.",
+    "image": "",
+    "seo": "The Untoz Awards are heading to Dubai."
+  },
+  {
+    "title": "Untoz Space: looking beyond Earth",
+    "slug": "untoz-space-looking-beyond-earth",
+    "category": "Space",
+    "status": "Published",
+    "author": "Untoz Space",
+    "date": "2026-08-12",
+    "excerpt": "Launches, missions and the stories shaping our view of space.",
+    "image": "",
+    "seo": "Space news, launches, missions and stories from Untoz Space."
+  }
+]
