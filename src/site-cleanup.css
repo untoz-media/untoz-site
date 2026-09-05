@@ -57,6 +57,21 @@ html{overflow-x:hidden}body{margin:0;min-width:320px;background:var(--page)}
 .about-strip,.contact-strip{margin-left:30px;margin-right:30px}
 .media-footer{margin-top:28px}
 
+/* Videos — darker editorial panel in light mode. */
+body:not(.theme-dark) #videos{background:#202020;color:#fff;border-radius:18px;margin:38px 30px 0;padding:34px 28px 42px;box-sizing:border-box}
+body:not(.theme-dark) #videos .portal-section-head h2{color:#fff}
+body:not(.theme-dark) #videos .portal-section-head>a{color:#d8d8d8}
+body:not(.theme-dark) #videos .main-video,body:not(.theme-dark) #videos .video-list a{color:#fff}
+body:not(.theme-dark) #videos .main-video>small{color:#aaa}
+body:not(.theme-dark) #videos .main-video>h3{color:#fff}
+body:not(.theme-dark) #videos .video-list a{background:#2b2b2b;border-color:#3a3a3a}
+body:not(.theme-dark) #videos .video-list a:hover{background:#343434;border-color:#4a4a4a}
+body:not(.theme-dark) #videos .video-list small{color:#aaa}
+body:not(.theme-dark) #videos .video-list strong{color:#fff}
+body:not(.theme-dark) #videos .video-list time{color:#999}
+body:not(.theme-dark) #videos .video-thumb{background:#3b3b3b;color:#fff}
+body:not(.theme-dark) #videos .video-stage{background:#111}
+
 @media(max-width:1100px){
  .portal-shell{width:min(100% - 24px,1500px)}
  .media-header-top{padding:0 20px;gap:16px}
@@ -85,6 +100,7 @@ html{overflow-x:hidden}body{margin:0;min-width:320px;background:var(--page)}
  .about-strip,.contact-strip{margin-left:20px;margin-right:20px}
  .now-grid{grid-template-columns:1fr 1fr}
  .now-live{grid-column:1/-1}
+ body:not(.theme-dark) #videos{margin-left:20px;margin-right:20px;padding:30px 20px 36px}
 }
 @media(max-width:600px){
  .portal-shell{width:calc(100% - 12px);margin:6px auto 16px;border-radius:15px}
@@ -111,6 +127,7 @@ html{overflow-x:hidden}body{margin:0;min-width:320px;background:var(--page)}
  .now-grid{grid-template-columns:1fr}
  .now-live{grid-column:auto;min-height:200px}
  .now-card{min-height:175px}
+ body:not(.theme-dark) #videos{margin-left:14px;margin-right:14px;padding:28px 16px 32px;border-radius:14px}
 }
 @media(max-width:400px){
  .portal-section{padding-left:12px;padding-right:12px}
