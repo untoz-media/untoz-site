@@ -1,0 +1,16 @@
+{
+  "site": {
+    "title": "Untoz",
+    "description": "Untoz — media, entertainment and technology.",
+    "language": "en",
+    "theme": "system"
+  },
+  "brand": {
+    "primary": "#174cff",
+    "secondary": "#593ceb",
+    "accent": "#b948ff"
+  },
+  "navigation": {
+    "main": ["Home", "About", "Untoz+", "News", "Sports", "Gaming", "More"]
+  }
+}
