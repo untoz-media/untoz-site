@@ -21,7 +21,29 @@ const sectionTitle=(t)=>`<div class="section-title"><h2>${t}</h2><a href="#foote
 root.innerHTML=`
 <div id="top">
 <div id="untoz-global-header"></div>
-<header class="site-header"><div class="site-inner"><a href="#top" class="brand">untoz</a><nav><a class="active" href="#top">Home</a><a href="#stories">News</a><a href="#explore">Sports</a><a href="#stories">Entertainment</a><a href="#featured">Movies & Series</a><a href="#explore">Gaming</a><a href="#explore">Music</a></nav><div class="site-links"><a class="onair" href="#live"><i></i> ON AIR</a><a href="#videos">Videos</a><a href="#live">Live</a><a href="#events">Calendar</a><a href="#featured">Productions</a><a href="#universe">Universe</a></div></div></header>
+<header class="untoz-site-header">
+  <a class="untoz-site-header__logo" href="#top" aria-label="Untoz home">untoz</a>
+  <nav class="untoz-site-header__nav" aria-label="Untoz site navigation">
+    <a class="active" href="#top">Home</a>
+    <a href="#stories">News</a>
+    <a href="#explore">Sports</a>
+    <a href="#stories">Entertainment</a>
+    <a href="#featured">Movies & Series</a>
+    <a href="#explore">Gaming</a>
+    <a href="#explore">Music</a>
+    <a href="#videos">Videos</a>
+    <a href="#events">Calendar</a>
+    <a href="#universe">Universe</a>
+  </nav>
+  <div class="untoz-site-header__actions">
+    <a class="untoz-site-header__action desktop-only" href="#stories" aria-label="Search Untoz">⌕</a>
+    <button class="untoz-site-header__action untoz-site-header__menu" id="siteMenuToggle" type="button" aria-label="Open menu">☰</button>
+    <a class="untoz-site-header__live" href="#live"><i></i> LIVE</a>
+  </div>
+  <nav class="untoz-site-header__mobile-nav" id="siteMobileNav" aria-label="Untoz mobile navigation">
+    <a href="#top">Home</a><a href="#stories">News</a><a href="#explore">Sports</a><a href="#stories">Entertainment</a><a href="#featured">Movies & Series</a><a href="#explore">Gaming</a><a href="#explore">Music</a><a href="#videos">Videos</a><a href="#events">Calendar</a><a href="#universe">Universe</a>
+  </nav>
+</header>
 <main class="page">
 <section class="hero"><img id="heroImg" src="${heroSlides[0][3]}" alt=""><div class="hero-shade"></div><button class="hero-arrow left" id="heroPrev">‹</button><button class="hero-arrow right" id="heroNext">›</button><div class="hero-copy"><small id="heroEyebrow">${heroSlides[0][0]}</small><h1 id="heroTitle">${heroSlides[0][1]}</h1><p id="heroText">${heroSlides[0][2]}</p><div><a class="pill primary" href="https://untozplus.com/">▶ Watch on Untoz+</a><a class="pill ghost" href="#featured">Explore</a></div></div><div class="hero-kicker">OUR PLANET<br>OUR STORIES<br>ONE UNIVERSE.</div><div class="hero-dots">${heroSlides.map((_,i)=>`<button data-slide="${i}" class="${i===0?'active':''}"></button>`).join('')}</div></section>
 <div class="live-strip" id="live"><div class="live-left"><span class="live-badge"><i></i> LIVE NOW</span><div><b>Untoz Live</b><small>Live events, broadcasts and special coverage.</small></div></div><div class="live-next"><span>NEXT</span><div><b>WorldUnited 2026 · Teaser</b><small>Today, 18:00</small></div></div><a href="#events">View schedule →</a></div>
@@ -37,6 +59,7 @@ if(window.UntozGlobalHeader){UntozGlobalHeader.render(document.getElementById('u
 let dark=localStorage.getItem('untoz-theme')==='dark';
 function applyTheme(){document.documentElement.dataset.theme=dark?'dark':'light';localStorage.setItem('untoz-theme',dark?'dark':'light')}
 window.addEventListener('untoz:themechange',e=>{dark=e.detail?.theme==='dark';applyTheme()});applyTheme();
+const siteMenuToggle=document.getElementById('siteMenuToggle');const siteMobileNav=document.getElementById('siteMobileNav');if(siteMenuToggle&&siteMobileNav){siteMenuToggle.addEventListener('click',()=>{const open=siteMobileNav.classList.toggle('open');siteMenuToggle.textContent=open?'×':'☰';siteMenuToggle.setAttribute('aria-label',open?'Close menu':'Open menu')});siteMobileNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{siteMobileNav.classList.remove('open');siteMenuToggle.textContent='☰'}));}
 let heroIndex=0;
 function showHero(i){heroIndex=(i+heroSlides.length)%heroSlides.length;const s=heroSlides[heroIndex];document.getElementById('heroImg').src=s[3];document.getElementById('heroEyebrow').textContent=s[0];document.getElementById('heroTitle').innerHTML=s[1];document.getElementById('heroText').innerHTML=s[2];document.querySelectorAll('.hero-dots button').forEach((b,n)=>b.classList.toggle('active',n===heroIndex))}
 document.getElementById('heroPrev').addEventListener('click',()=>showHero(heroIndex-1));document.getElementById('heroNext').addEventListener('click',()=>showHero(heroIndex+1));document.querySelectorAll('.hero-dots button').forEach(b=>b.addEventListener('click',()=>showHero(Number(b.dataset.slide))));setInterval(()=>showHero(heroIndex+1),7000);
