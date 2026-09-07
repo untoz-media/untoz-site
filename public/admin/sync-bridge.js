@@ -1,0 +1,41 @@
+(()=>{
+  const CMS_KEY='untozCommandCMS';
+  const SYNC_KEY='untozCommandLastSync';
+  const RAW='https://raw.githubusercontent.com/untoz-media/untoz-site/main/content/';
+  async function get(path){const r=await fetch(RAW+path+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(`Could not load ${path}`);return r.json()}
+  function toast(msg){let el=document.getElementById('command-sync-toast');if(!el){el=document.createElement('div');el.id='command-sync-toast';el.className='command-sync-toast';document.body.appendChild(el)}el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3200)}
+  function normalizeBlockType(type){return String(type||'').split('-').map(x=>x?x[0].toUpperCase()+x.slice(1):'').join(' ')}
+  async function loadLive(){
+    const [posts,categories,genres,homepage,about,contact]=await Promise.all([
+      get('posts.json'),get('categories.json'),get('genres.json'),get('homepage.json'),get('pages/about.json'),get('pages/contact.json')
+    ]);
+    return {
+      posts:(posts||[]).map((p,i)=>({id:Date.now()+i,title:p.title||'',slug:p.slug||'',type:p.category||'News',category:p.category||'News',genre:p.genre||'',author:p.author||'Untoz',date:p.date||'',status:p.status||'Draft',content:p.content||'',excerpt:p.excerpt||'',image:p.image||'',seo:p.seo||''})),
+      pages:[
+        {id:1,title:'Home',slug:'',status:'Published',content:''},
+        {...about,id:2},
+        {...contact,id:3}
+      ],
+      categories:Array.isArray(categories)?categories:[],
+      genres:Array.isArray(genres)?genres:[],
+      homepage:((homepage&&homepage.blocks)||[]).map((b,i)=>({id:b.id||`block-${Date.now()+i}`,type:normalizeBlockType(b.type),props:b.props||{}}))
+    }
+  }
+  async function sync({ask=false,reload=true}={}){
+    if(ask&&!confirm('Sync Untoz Command from the live CMS? This will replace unsaved local CMS data.'))return;
+    const btn=document.getElementById('command-sync');if(btn){btn.disabled=true;btn.textContent='Syncing…'}
+    try{
+      const live=await loadLive();
+      localStorage.setItem(CMS_KEY,JSON.stringify(live));
+      localStorage.setItem(SYNC_KEY,new Date().toISOString());
+      toast('Untoz Command synced with the live CMS.');
+      if(reload)setTimeout(()=>location.reload(),450);
+    }catch(e){toast(e.message||'CMS sync failed.');if(btn){btn.disabled=false;btn.textContent='Sync live'}}
+  }
+  function install(){
+    const style=document.createElement('style');style.textContent='.command-sync{position:fixed;right:22px;bottom:70px;z-index:9998;border:1px solid #2d3340;border-radius:999px;padding:10px 15px;background:#fff;color:#111;font:700 12px/1 system-ui;box-shadow:0 8px 30px #0002;cursor:pointer}.command-sync:hover{background:#f2f4f8}.command-sync:disabled{opacity:.55;cursor:wait}.command-sync-toast{position:fixed;left:50%;bottom:78px;transform:translate(-50%,18px);opacity:0;z-index:10000;background:#171a22;color:#fff;padding:12px 18px;border-radius:10px;font:600 13px system-ui;transition:.2s;pointer-events:none}.command-sync-toast.show{opacity:1;transform:translate(-50%,0)}';document.head.appendChild(style);
+    const b=document.createElement('button');b.id='command-sync';b.className='command-sync';b.type='button';b.textContent='↻ Sync live';b.title=localStorage.getItem(SYNC_KEY)?'Last sync: '+new Date(localStorage.getItem(SYNC_KEY)).toLocaleString():'Sync from live CMS';b.onclick=()=>sync({ask:true});document.body.appendChild(b);
+    if(!localStorage.getItem(CMS_KEY)&&!sessionStorage.getItem('untozCommandBootSync')){sessionStorage.setItem('untozCommandBootSync','1');sync({ask:false});}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
