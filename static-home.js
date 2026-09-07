@@ -20,7 +20,7 @@ const featured=[
 const sectionTitle=(t)=>`<div class="section-title"><h2>${t}</h2><a href="#footer">View all →</a></div>`;
 root.innerHTML=`
 <div id="top">
-<div class="global-header"><div class="global-inner"><nav><a class="active" href="#top">UNTOZ</a><a href="https://untozplus.com/">UNTOZ+</a><a href="#stories">NEWS</a><a href="#explore">SPORTS</a><a href="#explore">GAMING</a><a href="#footer">MORE⌄</a></nav><div class="global-tools"><button aria-label="Search">⌕</button><button id="themeToggle" aria-label="Dark mode">☾</button><span></span><button aria-label="Account">●</button></div></div></div>
+<div id="untoz-global-header"></div>
 <header class="site-header"><div class="site-inner"><a href="#top" class="brand">untoz</a><nav><a class="active" href="#top">Home</a><a href="#stories">News</a><a href="#explore">Sports</a><a href="#stories">Entertainment</a><a href="#featured">Movies & Series</a><a href="#explore">Gaming</a><a href="#explore">Music</a></nav><div class="site-links"><a class="onair" href="#live"><i></i> ON AIR</a><a href="#videos">Videos</a><a href="#live">Live</a><a href="#events">Calendar</a><a href="#featured">Productions</a><a href="#universe">Universe</a></div></div></header>
 <main class="page">
 <section class="hero"><img id="heroImg" src="${heroSlides[0][3]}" alt=""><div class="hero-shade"></div><button class="hero-arrow left" id="heroPrev">‹</button><button class="hero-arrow right" id="heroNext">›</button><div class="hero-copy"><small id="heroEyebrow">${heroSlides[0][0]}</small><h1 id="heroTitle">${heroSlides[0][1]}</h1><p id="heroText">${heroSlides[0][2]}</p><div><a class="pill primary" href="https://untozplus.com/">▶ Watch on Untoz+</a><a class="pill ghost" href="#featured">Explore</a></div></div><div class="hero-kicker">OUR PLANET<br>OUR STORIES<br>ONE UNIVERSE.</div><div class="hero-dots">${heroSlides.map((_,i)=>`<button data-slide="${i}" class="${i===0?'active':''}"></button>`).join('')}</div></section>
@@ -33,10 +33,10 @@ root.innerHTML=`
 </main>
 <footer id="footer"><div class="footer-inner"><div><a href="#top" class="brand">untoz</a><p>The media, entertainment and technology<br>universe of infinite.</p></div><div><b>Explore</b><a href="#stories">News</a><a href="#explore">Sports</a><a href="#stories">Entertainment</a><a href="#featured">Movies & Series</a><a href="#explore">Gaming</a><a href="#explore">Music</a></div><div><b>Watch</b><a href="#videos">Videos</a><a href="#live">Live</a><a href="#events">Calendar</a></div><div><b>Untoz</b><a href="#featured">Productions</a><a href="#universe">Universe</a><a href="mailto:contact@untoz.site">Contact</a></div><div class="social"><a href="#footer">X</a><a href="#footer">▶</a><a href="#footer">◎</a></div></div><div class="footer-bottom"><div><a href="#footer">Privacy</a><a href="#footer">Terms</a><a href="#footer">Cookies</a></div><span>© 2026 Untoz. All rights reserved.</span></div></footer>
 </div>`;
+if(window.UntozGlobalHeader){UntozGlobalHeader.render(document.getElementById('untoz-global-header'),{active:'untoz'});}
 let dark=localStorage.getItem('untoz-theme')==='dark';
-const toggle=document.getElementById('themeToggle');
-function applyTheme(){document.documentElement.dataset.theme=dark?'dark':'light';toggle.textContent=dark?'☀':'☾';toggle.setAttribute('aria-label',dark?'Light mode':'Dark mode');localStorage.setItem('untoz-theme',dark?'dark':'light')}
-toggle.addEventListener('click',()=>{dark=!dark;applyTheme()});applyTheme();
+function applyTheme(){document.documentElement.dataset.theme=dark?'dark':'light';localStorage.setItem('untoz-theme',dark?'dark':'light')}
+window.addEventListener('untoz:themechange',e=>{dark=e.detail?.theme==='dark';applyTheme()});applyTheme();
 let heroIndex=0;
 function showHero(i){heroIndex=(i+heroSlides.length)%heroSlides.length;const s=heroSlides[heroIndex];document.getElementById('heroImg').src=s[3];document.getElementById('heroEyebrow').textContent=s[0];document.getElementById('heroTitle').innerHTML=s[1];document.getElementById('heroText').innerHTML=s[2];document.querySelectorAll('.hero-dots button').forEach((b,n)=>b.classList.toggle('active',n===heroIndex))}
 document.getElementById('heroPrev').addEventListener('click',()=>showHero(heroIndex-1));document.getElementById('heroNext').addEventListener('click',()=>showHero(heroIndex+1));document.querySelectorAll('.hero-dots button').forEach(b=>b.addEventListener('click',()=>showHero(Number(b.dataset.slide))));setInterval(()=>showHero(heroIndex+1),7000);
