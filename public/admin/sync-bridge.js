@@ -6,16 +6,12 @@
   function toast(msg){let el=document.getElementById('command-sync-toast');if(!el){el=document.createElement('div');el.id='command-sync-toast';el.className='command-sync-toast';document.body.appendChild(el)}el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3200)}
   function normalizeBlockType(type){return String(type||'').split('-').map(x=>x?x[0].toUpperCase()+x.slice(1):'').join(' ')}
   async function loadLive(){
-    const [posts,categories,genres,homepage,about,contact,media]=await Promise.all([
-      get('posts.json'),get('categories.json'),get('genres.json'),get('homepage.json'),get('pages/about.json'),get('pages/contact.json'),get('media.json')
+    const [posts,categories,genres,homepage,pages,media]=await Promise.all([
+      get('posts.json'),get('categories.json'),get('genres.json'),get('homepage.json'),get('pages/index.json'),get('media.json')
     ]);
     return {
       posts:(posts||[]).map((p,i)=>({id:Date.now()+i,title:p.title||'',slug:p.slug||'',type:p.category||'News',category:p.category||'News',genre:p.genre||'',author:p.author||'Untoz',date:p.date||'',status:p.status||'Draft',content:p.content||'',excerpt:p.excerpt||'',image:p.image||'',seo:p.seo||''})),
-      pages:[
-        {id:1,title:'Home',slug:'',status:'Published',content:''},
-        {...about,id:2},
-        {...contact,id:3}
-      ],
+      pages:(pages||[]).map((p,i)=>({id:Date.now()+1000+i,title:p.title||'Untitled page',slug:p.slug||'',status:p.status||'Draft',content:p.content||'',seo:p.seo||''})),
       categories:Array.isArray(categories)?categories:[],
       genres:Array.isArray(genres)?genres:[],
       homepage:((homepage&&homepage.blocks)||[]).map((b,i)=>({id:b.id||`block-${Date.now()+i}`,type:normalizeBlockType(b.type),props:b.props||{}})),
