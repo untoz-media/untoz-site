@@ -20,7 +20,17 @@
   function logout(){const email=session()?.email||'';saveSession(null);authButton();syncPublishButton();emit('untoz:auth-change',{signedIn:false,email});toast('Signed out.')}
 
   function pageSlug(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9-]+/g,'-').replace(/^-+|-+$/g,'')}
-  function pageRouteHtml(slug){return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <meta name="robots" content="index,follow">\n  <title>Untoz</title>\n  <link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css">\n  <link rel="stylesheet" href="../page-renderer.css">\n</head>\n<body data-untoz-page="${slug}">\n  <div id="page-root"></div>\n  <script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script>\n  <script src="../page-renderer.js"></script>\n</body>\n</html>\n`}
+  function htmlEscape(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function pageRouteHtml(slug){return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <meta name="robots" content="index,follow">\n  <title>Untoz</title>\n  <link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css">\n  <link rel="stylesheet" href="../page-renderer.css">\n</head>\n<body data-untoz-page="${htmlEscape(slug)}">\n  <div id="page-root"></div>\n  <script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script>\n  <script src="../page-renderer.js"></script>\n</body>\n</html>\n`}
+  function articleRouteHtml(post){
+    const slug=pageSlug(post.slug||post.title||'story');
+    const category=pageSlug(post.category||'news')||'news';
+    const published=post.status==='Published';
+    const title=htmlEscape(post.seo_title||post.title||'Untoz');
+    const desc=htmlEscape(post.seo||post.excerpt||'Untoz story.');
+    const image=htmlEscape(post.image||'');
+    return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <meta name="robots" content="${published?'index,follow':'noindex,nofollow'}">\n  <meta name="description" content="${desc}">\n  <meta property="og:type" content="article">\n  <meta property="og:site_name" content="Untoz">\n  <meta property="og:title" content="${title}">\n  <meta property="og:description" content="${desc}">\n  ${image?`<meta property="og:image" content="${image}">\n  <meta name="twitter:image" content="${image}">\n  `:''}<meta name="twitter:card" content="summary_large_image">\n  <meta name="twitter:title" content="${title}">\n  <meta name="twitter:description" content="${desc}">\n  <title>${title} — Untoz</title>\n  <link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css">\n  <link rel="stylesheet" href="../../article-renderer.css">\n</head>\n<body data-article-category="${htmlEscape(category)}" data-article-slug="${htmlEscape(slug)}">\n  <div id="article-root"></div>\n  <script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script>\n  <script src="../../article-renderer.js"></script>\n</body>\n</html>\n`;
+  }
 
   async function reconcileScheduledPosts(){
     try{
@@ -44,10 +54,11 @@
     const routedPages=pages.filter(p=>pageSlug(p.slug));
     const pageFiles=routedPages.map(p=>({path:`content/pages/${pageSlug(p.slug)}.json`,content:JSON.stringify(p,null,2)+'\n'}));
     const routeFiles=routedPages.flatMap(p=>{const slug=pageSlug(p.slug),html=pageRouteHtml(slug);return[{path:`${slug}/index.html`,content:html},{path:`public/${slug}/index.html`,content:html}]});
+    const articleFiles=posts.filter(p=>['Published','Scheduled'].includes(p.status)&&pageSlug(p.slug)).flatMap(p=>{const category=pageSlug(p.category||'news')||'news';const slug=pageSlug(p.slug);const html=articleRouteHtml(p);return[{path:`${category}/${slug}/index.html`,content:html},{path:`public/${category}/${slug}/index.html`,content:html}]});
     return[
       {path:'content/posts.json',content:JSON.stringify(posts,null,2)+'\n'},
       {path:'content/pages/index.json',content:JSON.stringify(pages,null,2)+'\n'},
-      ...pageFiles,...routeFiles,
+      ...pageFiles,...routeFiles,...articleFiles,
       {path:'content/categories.json',content:JSON.stringify(s.categories||[],null,2)+'\n'},
       {path:'content/genres.json',content:JSON.stringify(s.genres||[],null,2)+'\n'},
       {path:'content/homepage.json',content:JSON.stringify({version:1,blocks:(s.homepage||[]).map(b=>({id:b.id,type:String(b.type||'').toLowerCase().replace(/ /g,'-'),props:b.props||{}}))},null,2)+'\n'},
