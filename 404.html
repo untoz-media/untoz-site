@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#111318">
+  <title>Page not found — Untoz</title>
+  <link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css">
+  <style>
+    :root{font-family:Inter,Arial,sans-serif;background:#f4f5f7;color:#111318}*{box-sizing:border-box}body{margin:0;background:inherit;color:inherit}.nf-shell{min-height:100vh;display:flex;flex-direction:column}.nf-header{width:min(1460px,calc(100% - 28px));margin:14px auto 0;background:#111318;color:#fff;border-radius:18px;min-height:66px;padding:0 18px;display:flex;align-items:center;justify-content:space-between}.nf-logo{font-size:28px;font-weight:950;letter-spacing:-.07em;color:#fff;text-decoration:none}.nf-header a:last-child{font-size:11px;font-weight:850;color:#cdd2dc;text-decoration:none}.nf-main{width:min(1180px,calc(100% - 32px));margin:auto;display:grid;grid-template-columns:auto 1fr;gap:70px;align-items:center;padding:70px 0}.nf-code{font-size:clamp(100px,21vw,270px);font-weight:950;line-height:.72;letter-spacing:-.1em;background:linear-gradient(135deg,#0cdb46,#1f6ffa 50%,#ff7c04);-webkit-background-clip:text;background-clip:text;color:transparent}.nf-copy span{font-size:10px;font-weight:900;letter-spacing:.16em;color:#1f6ffa}.nf-copy h1{font-size:clamp(42px,7vw,80px);line-height:.92;letter-spacing:-.065em;margin:9px 0 16px}.nf-copy p{font-size:15px;line-height:1.6;color:#68707d;max-width:590px}.nf-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:25px}.nf-actions a{border:1px solid #d9dde5;border-radius:999px;padding:11px 16px;background:#fff;color:#16191f;text-decoration:none;font-size:11px;font-weight:850}.nf-actions a.primary{background:#1f6ffa;border-color:#1f6ffa;color:#fff}.nf-network{width:min(1180px,calc(100% - 32px));margin:0 auto 30px;border-top:1px solid #dfe2e8;padding-top:20px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.nf-network a{font-size:10px;font-weight:800;color:#737b87;text-decoration:none}.nf-network a:hover{color:#1f6ffa}@media(max-width:760px){.nf-main{grid-template-columns:1fr;gap:30px}.nf-code{font-size:130px}.nf-main{padding:50px 0}.nf-header a:last-child{display:none}}
+  </style>
+</head>
+<body>
+  <div class="nf-shell">
+    <div id="untoz-global-header"></div>
+    <header class="nf-header"><a class="nf-logo" data-home>untoz</a><a data-search>Search Untoz ↗</a></header>
+    <main class="nf-main"><div class="nf-code">404</div><div class="nf-copy"><span>LOST IN THE UNTOZ UNIVERSE</span><h1>This page doesn’t exist.</h1><p>The link may have changed, the story may have moved, or you may have wandered into an unexplored corner of the Untoz universe.</p><div class="nf-actions"><a class="primary" data-home>Go to Untoz</a><a data-search>Search everything</a></div></div></main>
+    <nav class="nf-network"><a data-route="news">Untoz News</a><a data-route="sports">Untoz Sports</a><a data-route="pop">Untoz Pop</a><a data-route="gaming">Untoz Gaming</a><a data-route="space">Untoz Space</a><a data-route="kids">Untoz Kids</a><a data-route="archives">Untoz Archives</a></nav>
+  </div>
+  <script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script>
+  <script>
+    (()=>{const prefix=location.hostname.endsWith('github.io')?'/untoz-site/':'/';const u=p=>prefix+p;document.querySelectorAll('[data-home]').forEach(a=>a.href=u(''));document.querySelectorAll('[data-search]').forEach(a=>a.href=u('search/'));document.querySelectorAll('[data-route]').forEach(a=>a.href=u(a.dataset.route+'/'));if(window.UntozGlobalHeader)UntozGlobalHeader.render(document.getElementById('untoz-global-header'),{active:'untoz'});})();
+  </script>
+</body>
+</html>
