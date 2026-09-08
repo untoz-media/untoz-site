@@ -6,11 +6,40 @@
     "theme": "system"
   },
   "brand": {
-    "primary": "#174cff",
-    "secondary": "#593ceb",
-    "accent": "#b948ff"
+    "primary": "#1f6ffa",
+    "secondary": "#0cdb46",
+    "accent": "#ff7c04"
   },
   "navigation": {
-    "main": ["Home", "About", "Untoz+", "News", "Sports", "Gaming", "More"]
+    "main": [
+      {"label":"Home","href":"./"},
+      {"label":"News","href":"news/"},
+      {"label":"Sports","href":"sports/"},
+      {"label":"Entertainment","href":"entertainment/"},
+      {"label":"Movies & Series","href":"movies-series/"},
+      {"label":"Gaming","href":"gaming/"},
+      {"label":"Music","href":"music/"},
+      {"label":"Space","href":"space/"}
+    ]
+  },
+  "header": {
+    "show_search": true,
+    "show_live": true,
+    "live_label": "LIVE",
+    "live_href": "#live"
+  },
+  "footer": {
+    "tagline": "The media, entertainment and technology universe of infinite.",
+    "copyright": "© 2026 Untoz. All rights reserved.",
+    "links": [
+      {"label":"Privacy","href":"#footer"},
+      {"label":"Terms","href":"#footer"},
+      {"label":"Cookies","href":"#footer"}
+    ]
+  },
+  "social": {
+    "x": "",
+    "youtube": "",
+    "instagram": ""
   }
 }
