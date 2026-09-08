@@ -23,7 +23,7 @@ export default async function handler(req:VercelRequest,res:VercelResponse){
   const spec=TYPES[parsed.data.mime_type]!;const dot=parsed.data.filename.lastIndexOf('.');const rawExt=dot>0?parsed.data.filename.slice(dot+1).toLowerCase():'';const rawBase=dot>0?parsed.data.filename.slice(0,dot):parsed.data.filename;
   if(rawExt&&!spec.accepts.includes(rawExt))return res.status(400).json({error:`File extension .${rawExt} does not match ${parsed.data.mime_type}`});
   const name=slug(rawBase);if(!name)return res.status(400).json({error:'Filename has no usable characters'});
-  const clean=parsed.data.content_base64.replace(/^data:[^;]+;base64/,'').replace(/\s+/g,'');let bytes:Buffer;try{bytes=Buffer.from(clean,'base64')}catch{return res.status(400).json({error:'Invalid base64 content'})}
+  const clean=parsed.data.content_base64.replace(/^data:[^;]+;base64,/,'').replace(/\s+/g,'');let bytes:Buffer;try{bytes=Buffer.from(clean,'base64')}catch{return res.status(400).json({error:'Invalid base64 content'})}
   if(!bytes.length)return res.status(400).json({error:'File is empty'});if(bytes.length>MAX_BYTES)return res.status(413).json({error:'File exceeds the 8 MB limit'});if(!magic(bytes,parsed.data.mime_type))return res.status(400).json({error:`File contents are not a valid ${parsed.data.mime_type} image`});
   const now=new Date();const year=String(now.getUTCFullYear()),month=String(now.getUTCMonth()+1).padStart(2,'0'),suffix=Math.random().toString(16).slice(2,10);const path=`public/media/uploads/${year}/${month}/${name}-${suffix}.${spec.ext}`;
   const cfg=repoConfig(),siteBase=(process.env.PUBLIC_SITE_BASE||DEFAULT_SITE_BASE).replace(/\/$/,'');const publicUrl=`${siteBase}/${path.replace(/^public\//,'')}`;
