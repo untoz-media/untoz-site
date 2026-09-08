@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Untoz</title>
+    <link>https://untoz-media.github.io/untoz-site/</link>
+    <description>Latest stories from the Untoz universe.</description>
+    <language>en</language>
+    <lastBuildDate>Tue, 08 Sep 2026 10:55:00 GMT</lastBuildDate>
+    <item>
+      <title>Untoz+ is now streaming</title>
+      <link>https://untoz-media.github.io/untoz-site/news/untoz-plus-launch/</link>
+      <guid>https://untoz-media.github.io/untoz-site/news/untoz-plus-launch/</guid>
+      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A new home for entertainment, live events and stories across the Untoz universe.</description>
+    </item>
+    <item>
+      <title>The Untoz Awards are heading to Dubai</title>
+      <link>https://untoz-media.github.io/untoz-site/entertainment/untoz-awards-dubai/</link>
+      <guid>https://untoz-media.github.io/untoz-site/entertainment/untoz-awards-dubai/</guid>
+      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Everything you need to know about the next edition of the Untoz Awards.</description>
+    </item>
+    <item>
+      <title>Untoz Space: looking beyond Earth</title>
+      <link>https://untoz-media.github.io/untoz-site/space/untoz-space-looking-beyond-earth/</link>
+      <guid>https://untoz-media.github.io/untoz-site/space/untoz-space-looking-beyond-earth/</guid>
+      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Launches, missions and the stories shaping our view of space.</description>
+    </item>
+  </channel>
+</rss>
