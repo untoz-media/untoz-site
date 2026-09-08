@@ -1,5 +1,6 @@
 (()=>{
   const API_BASE='https://untoz-command-api.lovable.app';
+  const SITE_BASE='https://untoz-media.github.io/untoz-site';
   const STORAGE_KEY='untozCommandSession';
   const CMS_KEY='untozCommandCMS';
   const LAST_PUBLISH_KEY='untozCommandLastPublish';
@@ -21,6 +22,9 @@
 
   function pageSlug(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9-]+/g,'-').replace(/^-+|-+$/g,'')}
   function htmlEscape(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function xmlEscape(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[m]))}
+  function isoDay(v){const d=new Date(v||Date.now());return Number.isNaN(d.getTime())?new Date().toISOString().slice(0,10):d.toISOString().slice(0,10)}
+  function rfcDate(v){const d=new Date(v||Date.now());return Number.isNaN(d.getTime())?new Date().toUTCString():d.toUTCString()}
   function pageRouteHtml(slug){return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <meta name="robots" content="index,follow">\n  <title>Untoz</title>\n  <link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css">\n  <link rel="stylesheet" href="../page-renderer.css">\n</head>\n<body data-untoz-page="${htmlEscape(slug)}">\n  <div id="page-root"></div>\n  <script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script>\n  <script src="../page-renderer.js"></script>\n</body>\n</html>\n`}
   function articleRouteHtml(post){
     const slug=pageSlug(post.slug||post.title||'story');
@@ -32,6 +36,9 @@
     return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <meta name="robots" content="${published?'index,follow':'noindex,nofollow'}">\n  <meta name="description" content="${desc}">\n  <meta property="og:type" content="article">\n  <meta property="og:site_name" content="Untoz">\n  <meta property="og:title" content="${title}">\n  <meta property="og:description" content="${desc}">\n  ${image?`<meta property="og:image" content="${image}">\n  <meta name="twitter:image" content="${image}">\n  `:''}<meta name="twitter:card" content="summary_large_image">\n  <meta name="twitter:title" content="${title}">\n  <meta name="twitter:description" content="${desc}">\n  <title>${title} — Untoz</title>\n  <link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css">\n  <link rel="stylesheet" href="../../article-renderer.css">\n</head>\n<body data-article-category="${htmlEscape(category)}" data-article-slug="${htmlEscape(slug)}">\n  <div id="article-root"></div>\n  <script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script>\n  <script src="../../article-renderer.js"></script>\n</body>\n</html>\n`;
   }
   function subsidiaryRouteHtml(brand){const id=pageSlug(brand.id||brand.short||brand.name);const title=htmlEscape(brand.name||'Untoz');const desc=htmlEscape(brand.description||'Part of the Untoz network.');const accent=htmlEscape(brand.accent||'#1f6ffa');return `<!doctype html>\n<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="index,follow"><meta name="theme-color" content="${accent}"><meta name="description" content="${desc}"><title>${title} — Untoz</title><link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css"><link rel="stylesheet" href="../subsidiary-renderer.css"></head><body data-subsidiary="${htmlEscape(id)}"><div id="subsidiary-root"></div><script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script><script src="../subsidiary-renderer.js"></script></body></html>\n`}
+  function sitemapXml(posts,pages,brands){const urls=[{path:'',priority:'1.0',last:new Date()},{path:'search/',priority:'0.7',last:new Date()},{path:'entertainment/',priority:'0.7',last:new Date()},{path:'music/',priority:'0.7',last:new Date()},{path:'movies-series/',priority:'0.7',last:new Date()}];pages.filter(p=>p.status==='Published'&&pageSlug(p.slug)).forEach(p=>urls.push({path:`${pageSlug(p.slug)}/`,priority:'0.6',last:p.updated_at||new Date()}));brands.filter(b=>b.enabled&&b.id).forEach(b=>urls.push({path:`${b.id}/`,priority:'0.9',last:new Date()}));posts.filter(p=>p.status==='Published'&&pageSlug(p.slug)).forEach(p=>urls.push({path:`${pageSlug(p.category||'news')||'news'}/${pageSlug(p.slug)}/`,priority:'0.8',last:p.published_at||p.date||p.updated_at||new Date()}));const seen=new Set();const body=urls.filter(u=>{const full=SITE_BASE+'/'+u.path;if(seen.has(full))return false;seen.add(full);return true}).map(u=>`  <url><loc>${xmlEscape(SITE_BASE+'/'+u.path)}</loc><lastmod>${isoDay(u.last)}</lastmod><priority>${u.priority}</priority></url>`).join('\n');return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`}
+  function rssXml(posts){const published=posts.filter(p=>p.status==='Published'&&pageSlug(p.slug)).sort((a,b)=>new Date(b.published_at||b.date||0)-new Date(a.published_at||a.date||0)).slice(0,20);const items=published.map(p=>{const url=`${SITE_BASE}/${pageSlug(p.category||'news')||'news'}/${pageSlug(p.slug)}/`;return `    <item>\n      <title>${xmlEscape(p.title||'Untitled story')}</title>\n      <link>${xmlEscape(url)}</link>\n      <guid>${xmlEscape(url)}</guid>\n      <pubDate>${xmlEscape(rfcDate(p.published_at||p.date))}</pubDate>\n      <description>${xmlEscape(p.excerpt||p.seo||'')}</description>\n    </item>`}).join('\n');return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>Untoz</title>\n    <link>${SITE_BASE}/</link>\n    <description>Latest stories from the Untoz universe.</description>\n    <language>en</language>\n    <lastBuildDate>${rfcDate()}</lastBuildDate>\n${items}\n  </channel>\n</rss>\n`}
+  function robotsTxt(){return `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE_BASE}/sitemap.xml\n`}
 
   async function reconcileScheduledPosts(){
     try{
@@ -50,7 +57,7 @@
       title:p.title||'',slug:p.slug||'',status:p.status||'Draft',category:p.category||'',genre:p.genre||'',author:p.author||'Untoz',date:p.date||'',image:p.image||'',excerpt:p.excerpt||'',content:p.content||'',seo:p.seo||'',
       seo_title:p.seo_title||'',social_title:p.social_title||'',social_description:p.social_description||'',scheduled_at:p.scheduled_at||'',published_at:p.published_at||'',featured:!!p.featured,breaking:!!p.breaking,pinned:!!p.pinned,top_story:!!p.top_story,related:Array.isArray(p.related)?p.related:[],updated_at:p.updated_at||''
     }));
-    const pages=(s.pages||[]).map(p=>({title:p.title||'',slug:p.slug||'',status:p.status||'Draft',content:p.content||'',seo:p.seo||'',styles:p.styles&&typeof p.styles==='object'?p.styles:{},blocks:Array.isArray(p.blocks)?p.blocks:[]}));
+    const pages=(s.pages||[]).map(p=>({title:p.title||'',slug:p.slug||'',status:p.status||'Draft',content:p.content||'',seo:p.seo||'',styles:p.styles&&typeof p.styles==='object'?p.styles:{},blocks:Array.isArray(p.blocks)?p.blocks:[],updated_at:p.updated_at||''}));
     const media=(s.media||[]).map(a=>({id:a.id||'',title:a.title||'',url:a.url||'',type:a.type||'Image',alt:a.alt||'',tags:Array.isArray(a.tags)?a.tags:[],updated_at:a.updated_at||''}));
     const brands=(s.brands||[]).map(b=>({id:pageSlug(b.id||b.short||b.name),name:b.name||'',short:b.short||'',accent:b.accent||'#1f6ffa',tagline:b.tagline||'',description:b.description||'',categories:Array.isArray(b.categories)?b.categories:[],hero:b.hero||'',navigation:Array.isArray(b.navigation)?b.navigation:[],enabled:b.enabled!==false})).filter(b=>b.id);
     const routedPages=pages.filter(p=>pageSlug(p.slug));
@@ -58,6 +65,7 @@
     const routeFiles=routedPages.flatMap(p=>{const slug=pageSlug(p.slug),html=pageRouteHtml(slug);return[{path:`${slug}/index.html`,content:html},{path:`public/${slug}/index.html`,content:html}]});
     const articleFiles=posts.filter(p=>['Published','Scheduled'].includes(p.status)&&pageSlug(p.slug)).flatMap(p=>{const category=pageSlug(p.category||'news')||'news';const slug=pageSlug(p.slug);const html=articleRouteHtml(p);return[{path:`${category}/${slug}/index.html`,content:html},{path:`public/${category}/${slug}/index.html`,content:html}]});
     const brandFiles=brands.filter(b=>b.enabled).flatMap(b=>{const html=subsidiaryRouteHtml(b);return[{path:`${b.id}/index.html`,content:html},{path:`public/${b.id}/index.html`,content:html}]});
+    const sitemap=sitemapXml(posts,pages,brands),rss=rssXml(posts),robots=robotsTxt();
     return[
       {path:'content/posts.json',content:JSON.stringify(posts,null,2)+'\n'},
       {path:'content/pages/index.json',content:JSON.stringify(pages,null,2)+'\n'},
@@ -66,7 +74,10 @@
       {path:'content/genres.json',content:JSON.stringify(s.genres||[],null,2)+'\n'},
       {path:'content/homepage.json',content:JSON.stringify({version:1,blocks:(s.homepage||[]).map(b=>({id:b.id,type:String(b.type||'').toLowerCase().replace(/ /g,'-'),props:b.props||{}}))},null,2)+'\n'},
       {path:'content/media.json',content:JSON.stringify(media,null,2)+'\n'},
-      {path:'content/brands.json',content:JSON.stringify({version:1,brands},null,2)+'\n'}
+      {path:'content/brands.json',content:JSON.stringify({version:1,brands},null,2)+'\n'},
+      {path:'robots.txt',content:robots},{path:'public/robots.txt',content:robots},
+      {path:'sitemap.xml',content:sitemap},{path:'public/sitemap.xml',content:sitemap},
+      {path:'feed.xml',content:rss},{path:'public/feed.xml',content:rss}
     ]
   }
 
