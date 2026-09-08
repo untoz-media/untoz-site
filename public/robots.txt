@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+Sitemap: https://untoz-media.github.io/untoz-site/sitemap.xml
