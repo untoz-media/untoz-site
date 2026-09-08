@@ -4,6 +4,7 @@
   const RAW='https://raw.githubusercontent.com/untoz-media/untoz-site/main/content/';
   async function get(path){const r=await fetch(RAW+path+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(`Could not load ${path}`);return r.json()}
   function toast(msg){let el=document.getElementById('command-sync-toast');if(!el){el=document.createElement('div');el.id='command-sync-toast';el.className='command-sync-toast';document.body.appendChild(el)}el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3200)}
+  function emit(name,detail={}){window.dispatchEvent(new CustomEvent(name,{detail}))}
   function normalizeBlockType(type){return String(type||'').split('-').map(x=>x?x[0].toUpperCase()+x.slice(1):'').join(' ')}
   async function loadLive(){
     const [posts,categories,genres,homepage,pages,media]=await Promise.all([
@@ -31,11 +32,13 @@
     const btn=document.getElementById('command-sync');if(btn){btn.disabled=true;btn.textContent='Syncing…'}
     try{
       const live=await loadLive();
+      const at=new Date().toISOString();
       localStorage.setItem(CMS_KEY,JSON.stringify(live));
-      localStorage.setItem(SYNC_KEY,new Date().toISOString());
+      localStorage.setItem(SYNC_KEY,at);
+      emit('untoz:sync-success',{at,cms:live});
       toast('Untoz Command synced with the live CMS.');
       if(reload)setTimeout(()=>location.reload(),450);
-    }catch(e){toast(e.message||'CMS sync failed.');if(btn){btn.disabled=false;btn.textContent='Sync live'}}
+    }catch(e){const message=e.message||'CMS sync failed.';emit('untoz:sync-failure',{message});toast(message);if(btn){btn.disabled=false;btn.textContent='Sync live'}}
   }
   function install(){
     const style=document.createElement('style');style.textContent='.command-sync{position:fixed;right:22px;bottom:70px;z-index:9998;border:1px solid #2d3340;border-radius:999px;padding:10px 15px;background:#fff;color:#111;font:700 12px/1 system-ui;box-shadow:0 8px 30px #0002;cursor:pointer}.command-sync:hover{background:#f2f4f8}.command-sync:disabled{opacity:.55;cursor:wait}.command-sync-toast{position:fixed;left:50%;bottom:78px;transform:translate(-50%,18px);opacity:0;z-index:10000;background:#171a22;color:#fff;padding:12px 18px;border-radius:10px;font:600 13px system-ui;transition:.2s;pointer-events:none}.command-sync-toast.show{opacity:1;transform:translate(-50%,0)}';document.head.appendChild(style);
