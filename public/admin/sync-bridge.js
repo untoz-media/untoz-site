@@ -7,44 +7,18 @@
   function emit(name,detail={}){window.dispatchEvent(new CustomEvent(name,{detail}))}
   function normalizeBlockType(type){return String(type||'').split('-').map(x=>x?x[0].toUpperCase()+x.slice(1):'').join(' ')}
   async function loadLive(){
-    const [posts,categories,genres,homepage,pages,media,brandData]=await Promise.all([
-      get('posts.json'),get('categories.json'),get('genres.json'),get('homepage.json'),get('pages/index.json'),get('media.json'),get('brands.json')
+    const [posts,categories,genres,homepage,pages,media,brandData,siteData]=await Promise.all([
+      get('posts.json'),get('categories.json'),get('genres.json'),get('homepage.json'),get('pages/index.json'),get('media.json'),get('brands.json'),get('site.json')
     ]);
     return {
-      posts:(posts||[]).map((p,i)=>({
-        id:Date.now()+i,
-        title:p.title||'',slug:p.slug||'',type:p.category||'News',category:p.category||'News',genre:p.genre||'',author:p.author||'Untoz',date:p.date||'',status:p.status||'Draft',content:p.content||'',excerpt:p.excerpt||'',image:p.image||'',seo:p.seo||'',
-        seo_title:p.seo_title||'',social_title:p.social_title||'',social_description:p.social_description||'',scheduled_at:p.scheduled_at||'',published_at:p.published_at||'',featured:!!p.featured,breaking:!!p.breaking,pinned:!!p.pinned,top_story:!!p.top_story,related:Array.isArray(p.related)?p.related:[],updated_at:p.updated_at||''
-      })),
-      pages:(pages||[]).map((p,i)=>({
-        id:Date.now()+1000+i,
-        title:p.title||'Untitled page',slug:p.slug||'',status:p.status||'Draft',content:p.content||'',seo:p.seo||'',
-        styles:p.styles&&typeof p.styles==='object'?p.styles:{},blocks:Array.isArray(p.blocks)?p.blocks:[]
-      })),
-      categories:Array.isArray(categories)?categories:[],
-      genres:Array.isArray(genres)?genres:[],
-      homepage:((homepage&&homepage.blocks)||[]).map((b,i)=>({id:b.id||`block-${Date.now()+i}`,type:normalizeBlockType(b.type),props:b.props||{}})),
-      media:Array.isArray(media)?media:[],
-      brands:Array.isArray(brandData?.brands)?brandData.brands.map(b=>({id:b.id||'',name:b.name||'',short:b.short||'',accent:b.accent||'#1f6ffa',tagline:b.tagline||'',description:b.description||'',categories:Array.isArray(b.categories)?b.categories:[],hero:b.hero||'',navigation:Array.isArray(b.navigation)?b.navigation:[],enabled:b.enabled!==false})):[]
+      posts:(posts||[]).map((p,i)=>({id:Date.now()+i,title:p.title||'',slug:p.slug||'',type:p.category||'News',category:p.category||'News',genre:p.genre||'',author:p.author||'Untoz',date:p.date||'',status:p.status||'Draft',content:p.content||'',excerpt:p.excerpt||'',image:p.image||'',seo:p.seo||'',seo_title:p.seo_title||'',social_title:p.social_title||'',social_description:p.social_description||'',scheduled_at:p.scheduled_at||'',published_at:p.published_at||'',featured:!!p.featured,breaking:!!p.breaking,pinned:!!p.pinned,top_story:!!p.top_story,related:Array.isArray(p.related)?p.related:[],updated_at:p.updated_at||''})),
+      pages:(pages||[]).map((p,i)=>({id:Date.now()+1000+i,title:p.title||'Untitled page',slug:p.slug||'',status:p.status||'Draft',content:p.content||'',seo:p.seo||'',styles:p.styles&&typeof p.styles==='object'?p.styles:{},blocks:Array.isArray(p.blocks)?p.blocks:[],updated_at:p.updated_at||''})),
+      categories:Array.isArray(categories)?categories:[],genres:Array.isArray(genres)?genres:[],homepage:((homepage&&homepage.blocks)||[]).map((b,i)=>({id:b.id||`block-${Date.now()+i}`,type:normalizeBlockType(b.type),props:b.props||{}})),media:Array.isArray(media)?media:[],
+      brands:Array.isArray(brandData?.brands)?brandData.brands.map(b=>({id:b.id||'',name:b.name||'',short:b.short||'',accent:b.accent||'#1f6ffa',tagline:b.tagline||'',description:b.description||'',categories:Array.isArray(b.categories)?b.categories:[],hero:b.hero||'',navigation:Array.isArray(b.navigation)?b.navigation:[],enabled:b.enabled!==false})):[],
+      siteConfig:siteData&&typeof siteData==='object'?siteData:{}
     }
   }
-  async function sync({ask=false,reload=true}={}){
-    if(ask&&!confirm('Sync Untoz Command from the live CMS? This will replace unsaved local CMS data.'))return;
-    const btn=document.getElementById('command-sync');if(btn){btn.disabled=true;btn.textContent='Syncing…'}
-    try{
-      const live=await loadLive();
-      const at=new Date().toISOString();
-      localStorage.setItem(CMS_KEY,JSON.stringify(live));
-      localStorage.setItem(SYNC_KEY,at);
-      emit('untoz:sync-success',{at,cms:live});
-      toast('Untoz Command synced with the live CMS.');
-      if(reload)setTimeout(()=>location.reload(),450);
-    }catch(e){const message=e.message||'CMS sync failed.';emit('untoz:sync-failure',{message});toast(message);if(btn){btn.disabled=false;btn.textContent='Sync live'}}
-  }
-  function install(){
-    const style=document.createElement('style');style.textContent='.command-sync{position:fixed;right:22px;bottom:70px;z-index:9998;border:1px solid #2d3340;border-radius:999px;padding:10px 15px;background:#fff;color:#111;font:700 12px/1 system-ui;box-shadow:0 8px 30px #0002;cursor:pointer}.command-sync:hover{background:#f2f4f8}.command-sync:disabled{opacity:.55;cursor:wait}.command-sync-toast{position:fixed;left:50%;bottom:78px;transform:translate(-50%,18px);opacity:0;z-index:10000;background:#171a22;color:#fff;padding:12px 18px;border-radius:10px;font:600 13px system-ui;transition:.2s;pointer-events:none}.command-sync-toast.show{opacity:1;transform:translate(-50%,0)}';document.head.appendChild(style);
-    const b=document.createElement('button');b.id='command-sync';b.className='command-sync';b.type='button';b.textContent='↻ Sync live';b.title=localStorage.getItem(SYNC_KEY)?'Last sync: '+new Date(localStorage.getItem(SYNC_KEY)).toLocaleString():'Sync from live CMS';b.onclick=()=>sync({ask:true});document.body.appendChild(b);
-    if(!localStorage.getItem(CMS_KEY)&&!sessionStorage.getItem('untozCommandBootSync')){sessionStorage.setItem('untozCommandBootSync','1');sync({ask:false});}
-  }
+  async function sync({ask=false,reload=true}={}){if(ask&&!confirm('Sync Untoz Command from the live CMS? This will replace unsaved local CMS data.'))return;const btn=document.getElementById('command-sync');if(btn){btn.disabled=true;btn.textContent='Syncing…'}try{const live=await loadLive();const at=new Date().toISOString();localStorage.setItem(CMS_KEY,JSON.stringify(live));localStorage.setItem(SYNC_KEY,at);emit('untoz:sync-success',{at,cms:live});toast('Untoz Command synced with the live CMS.');if(reload)setTimeout(()=>location.reload(),450)}catch(e){const message=e.message||'CMS sync failed.';emit('untoz:sync-failure',{message});toast(message);if(btn){btn.disabled=false;btn.textContent='Sync live'}}}
+  function install(){const style=document.createElement('style');style.textContent='.command-sync{position:fixed;right:22px;bottom:70px;z-index:9998;border:1px solid #2d3340;border-radius:999px;padding:10px 15px;background:#fff;color:#111;font:700 12px/1 system-ui;box-shadow:0 8px 30px #0002;cursor:pointer}.command-sync:hover{background:#f2f4f8}.command-sync:disabled{opacity:.55;cursor:wait}.command-sync-toast{position:fixed;left:50%;bottom:78px;transform:translate(-50%,18px);opacity:0;z-index:10000;background:#171a22;color:#fff;padding:12px 18px;border-radius:10px;font:600 13px system-ui;transition:.2s;pointer-events:none}.command-sync-toast.show{opacity:1;transform:translate(-50%,0)}';document.head.appendChild(style);const b=document.createElement('button');b.id='command-sync';b.className='command-sync';b.type='button';b.textContent='↻ Sync live';b.title=localStorage.getItem(SYNC_KEY)?'Last sync: '+new Date(localStorage.getItem(SYNC_KEY)).toLocaleString():'Sync from live CMS';b.onclick=()=>sync({ask:true});document.body.appendChild(b);if(!localStorage.getItem(CMS_KEY)&&!sessionStorage.getItem('untozCommandBootSync')){sessionStorage.setItem('untozCommandBootSync','1');sync({ask:false})}}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();
