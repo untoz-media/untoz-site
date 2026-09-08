@@ -10,14 +10,17 @@
   function authButton(){let b=document.getElementById('command-auth');if(!b){b=document.createElement('button');b.id='command-auth';b.className='command-auth';document.body.appendChild(b);b.onclick=()=>session()?logout():login()}b.textContent=session()?'Sign out':'Admin sign in';return b}
   async function login(){const email=prompt('Untoz Command admin email:');if(!email)return;const password=prompt('Password:');if(!password)return;try{const c=await config();if(!c.configured)throw Error('Authentication is not configured yet.');const r=await fetch(c.supabase_url+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':c.supabase_anon_key},body:JSON.stringify({email,password})});const d=await r.json();if(!r.ok)throw Error(d.error_description||d.msg||'Sign in failed');saveSession({access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Date.now()+((d.expires_in||3600)*1000),email:d.user?.email||email});authButton();syncPublishButton();toast('Signed in to Untoz Command.')}catch(e){toast(e.message||'Sign in failed.')}}
   function logout(){saveSession(null);authButton();syncPublishButton();toast('Signed out.')}
+  function pageSlug(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9-]+/g,'-').replace(/^-+|-+$/g,'')}
   function cmsFiles(){
     let s={};try{s=JSON.parse(localStorage.getItem(CMS_KEY)||'{}')}catch{}
     const posts=(s.posts||[]).map(p=>({title:p.title||'',slug:p.slug||'',status:p.status||'Draft',category:p.category||'',genre:p.genre||'',author:p.author||'Untoz',date:p.date||'',image:p.image||'',excerpt:p.excerpt||'',content:p.content||'',seo:p.seo||''}));
     const pages=(s.pages||[]).map(p=>({title:p.title||'',slug:p.slug||'',status:p.status||'Draft',content:p.content||'',seo:p.seo||''}));
     const media=(s.media||[]).map(a=>({id:a.id||'',title:a.title||'',url:a.url||'',type:a.type||'Image',alt:a.alt||'',tags:Array.isArray(a.tags)?a.tags:[],updated_at:a.updated_at||''}));
+    const pageFiles=pages.filter(p=>pageSlug(p.slug)).map(p=>({path:`content/pages/${pageSlug(p.slug)}.json`,content:JSON.stringify(p,null,2)+'\n'}));
     return[
       {path:'content/posts.json',content:JSON.stringify(posts,null,2)+'\n'},
       {path:'content/pages/index.json',content:JSON.stringify(pages,null,2)+'\n'},
+      ...pageFiles,
       {path:'content/categories.json',content:JSON.stringify(s.categories||[],null,2)+'\n'},
       {path:'content/genres.json',content:JSON.stringify(s.genres||[],null,2)+'\n'},
       {path:'content/homepage.json',content:JSON.stringify({version:1,blocks:(s.homepage||[]).map(b=>({id:b.id,type:String(b.type||'').toLowerCase().replace(/ /g,'-'),props:b.props||{}}))},null,2)+'\n'},
