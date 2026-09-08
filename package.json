@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "validate:content": "node scripts/validate-content.mjs",
-    "build": "node scripts/validate-content.mjs && vite build && node scripts/copy-content.mjs && node scripts/prune-generated-routes.mjs",
+    "build": "node scripts/validate-content.mjs && vite build && node scripts/copy-content.mjs && node scripts/prune-generated-routes.mjs && node scripts/inject-analytics.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
