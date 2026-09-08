@@ -31,6 +31,7 @@
     const image=htmlEscape(post.image||'');
     return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <meta name="robots" content="${published?'index,follow':'noindex,nofollow'}">\n  <meta name="description" content="${desc}">\n  <meta property="og:type" content="article">\n  <meta property="og:site_name" content="Untoz">\n  <meta property="og:title" content="${title}">\n  <meta property="og:description" content="${desc}">\n  ${image?`<meta property="og:image" content="${image}">\n  <meta name="twitter:image" content="${image}">\n  `:''}<meta name="twitter:card" content="summary_large_image">\n  <meta name="twitter:title" content="${title}">\n  <meta name="twitter:description" content="${desc}">\n  <title>${title} — Untoz</title>\n  <link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css">\n  <link rel="stylesheet" href="../../article-renderer.css">\n</head>\n<body data-article-category="${htmlEscape(category)}" data-article-slug="${htmlEscape(slug)}">\n  <div id="article-root"></div>\n  <script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script>\n  <script src="../../article-renderer.js"></script>\n</body>\n</html>\n`;
   }
+  function subsidiaryRouteHtml(brand){const id=pageSlug(brand.id||brand.short||brand.name);const title=htmlEscape(brand.name||'Untoz');const desc=htmlEscape(brand.description||'Part of the Untoz network.');const accent=htmlEscape(brand.accent||'#1f6ffa');return `<!doctype html>\n<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="index,follow"><meta name="theme-color" content="${accent}"><meta name="description" content="${desc}"><title>${title} — Untoz</title><link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css"><link rel="stylesheet" href="../subsidiary-renderer.css"></head><body data-subsidiary="${htmlEscape(id)}"><div id="subsidiary-root"></div><script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script><script src="../subsidiary-renderer.js"></script></body></html>\n`}
 
   async function reconcileScheduledPosts(){
     try{
@@ -51,18 +52,21 @@
     }));
     const pages=(s.pages||[]).map(p=>({title:p.title||'',slug:p.slug||'',status:p.status||'Draft',content:p.content||'',seo:p.seo||'',styles:p.styles&&typeof p.styles==='object'?p.styles:{},blocks:Array.isArray(p.blocks)?p.blocks:[]}));
     const media=(s.media||[]).map(a=>({id:a.id||'',title:a.title||'',url:a.url||'',type:a.type||'Image',alt:a.alt||'',tags:Array.isArray(a.tags)?a.tags:[],updated_at:a.updated_at||''}));
+    const brands=(s.brands||[]).map(b=>({id:pageSlug(b.id||b.short||b.name),name:b.name||'',short:b.short||'',accent:b.accent||'#1f6ffa',tagline:b.tagline||'',description:b.description||'',categories:Array.isArray(b.categories)?b.categories:[],hero:b.hero||'',navigation:Array.isArray(b.navigation)?b.navigation:[],enabled:b.enabled!==false})).filter(b=>b.id);
     const routedPages=pages.filter(p=>pageSlug(p.slug));
     const pageFiles=routedPages.map(p=>({path:`content/pages/${pageSlug(p.slug)}.json`,content:JSON.stringify(p,null,2)+'\n'}));
     const routeFiles=routedPages.flatMap(p=>{const slug=pageSlug(p.slug),html=pageRouteHtml(slug);return[{path:`${slug}/index.html`,content:html},{path:`public/${slug}/index.html`,content:html}]});
     const articleFiles=posts.filter(p=>['Published','Scheduled'].includes(p.status)&&pageSlug(p.slug)).flatMap(p=>{const category=pageSlug(p.category||'news')||'news';const slug=pageSlug(p.slug);const html=articleRouteHtml(p);return[{path:`${category}/${slug}/index.html`,content:html},{path:`public/${category}/${slug}/index.html`,content:html}]});
+    const brandFiles=brands.filter(b=>b.enabled).flatMap(b=>{const html=subsidiaryRouteHtml(b);return[{path:`${b.id}/index.html`,content:html},{path:`public/${b.id}/index.html`,content:html}]});
     return[
       {path:'content/posts.json',content:JSON.stringify(posts,null,2)+'\n'},
       {path:'content/pages/index.json',content:JSON.stringify(pages,null,2)+'\n'},
-      ...pageFiles,...routeFiles,...articleFiles,
+      ...pageFiles,...routeFiles,...articleFiles,...brandFiles,
       {path:'content/categories.json',content:JSON.stringify(s.categories||[],null,2)+'\n'},
       {path:'content/genres.json',content:JSON.stringify(s.genres||[],null,2)+'\n'},
       {path:'content/homepage.json',content:JSON.stringify({version:1,blocks:(s.homepage||[]).map(b=>({id:b.id,type:String(b.type||'').toLowerCase().replace(/ /g,'-'),props:b.props||{}}))},null,2)+'\n'},
-      {path:'content/media.json',content:JSON.stringify(media,null,2)+'\n'}
+      {path:'content/media.json',content:JSON.stringify(media,null,2)+'\n'},
+      {path:'content/brands.json',content:JSON.stringify({version:1,brands},null,2)+'\n'}
     ]
   }
 
