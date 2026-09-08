@@ -3,11 +3,12 @@ import { cors,preflight,requireAdmin,isAuthFailure,ROLES,type AppRole,audit,clie
 
 const ADMIN_ASSIGNABLE:AppRole[]=['editor','writer','viewer'];
 function isRole(v:unknown):v is AppRole{return ROLES.includes(v as AppRole)}
+function canAssign(actor:AppRole,target:AppRole){return actor==='owner'||ADMIN_ASSIGNABLE.includes(target)}
 
 export default async function handler(req:VercelRequest,res:VercelResponse){
   if(req.method==='OPTIONS') return preflight(req,res);
   if(!cors(req,res)) return res.status(403).json({error:'Origin not allowed'});
-  if(!['GET','PATCH'].includes(String(req.method))) return res.status(405).json({error:'Method not allowed'});
+  if(!['GET','POST','PATCH'].includes(String(req.method))) return res.status(405).json({error:'Method not allowed'});
   const auth=await requireAdmin(req);if(isAuthFailure(auth)) return res.status(auth.status).json({error:auth.error});
 
   if(req.method==='GET'){
@@ -16,6 +17,20 @@ export default async function handler(req:VercelRequest,res:VercelResponse){
     const emails=new Map<string,string|null>();
     try{const {data}=await auth.admin.auth.admin.listUsers({page:1,perPage:200});for(const u of data.users||[])emails.set(u.id,u.email??null)}catch{}
     return res.status(200).json({members:(rows||[]).map((r:any)=>({user_id:r.user_id,email:emails.get(r.user_id)??null,role:r.role,created_at:r.created_at}))});
+  }
+
+  if(req.method==='POST'){
+    const body=(req.body||{}) as any;const email=String(body.email||'').trim().toLowerCase();const role=body.role;
+    if(!/^\S+@\S+\.\S+$/.test(email)||!isRole(role))return res.status(400).json({error:'Valid email and role are required'});
+    if(!canAssign(auth.role,role))return res.status(403).json({error:'Admins can only invite editor, writer or viewer accounts'});
+    if(role==='owner'&&auth.role!=='owner')return res.status(403).json({error:'Only an owner can invite another owner'});
+    const {data:invited,error:inviteError}=await auth.admin.auth.admin.inviteUserByEmail(email);
+    if(inviteError||!invited.user)return res.status(400).json({error:inviteError?.message||'Could not invite user'});
+    await auth.admin.from('user_roles').delete().eq('user_id',invited.user.id);
+    const {error:roleError}=await auth.admin.from('user_roles').insert({user_id:invited.user.id,role});
+    if(roleError)return res.status(500).json({error:'Invitation sent but role assignment failed'});
+    await audit(auth,{action:'team_invite',repo:'n/a',branch:'n/a',message:`Invited ${email} as ${role}`,status:'success',request_ip:clientIp(req)});
+    return res.status(200).json({status:'invited',user_id:invited.user.id,email,role});
   }
 
   const body=(req.body||{}) as any;const targetId=String(body.user_id||'');const newRole=body.role;
