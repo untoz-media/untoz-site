@@ -2,6 +2,7 @@
   const SESSION_KEY='untozCommandSession';
   const CMS_KEY='untozCommandCMS';
   const FINAL_DOMAIN='untoz.site';
+  const LIVE_SITE_CONFIG='https://raw.githubusercontent.com/untoz-media/untoz-site/main/content/site.json';
   let currentCard=null;
   let runToken=0;
 
@@ -19,7 +20,7 @@
     if(small)small.textContent=detail;
     if(pill){pill.className=`command-pub-pill ${stateClass(state)}`;pill.textContent=label(state)}
   }
-  function analyticsConfig(){const cms=readJSON(CMS_KEY,{})||{};return cms.siteConfig?.analytics||{enabled:false,endpoint:''}}
+  function localAnalyticsConfig(){const cms=readJSON(CMS_KEY,{})||{};return cms.siteConfig?.analytics||{enabled:false,endpoint:''}}
   function session(){return readJSON(SESSION_KEY,null)}
   async function getJSON(url,options={}){
     const response=await fetch(url,{cache:'no-store',...options});
@@ -93,13 +94,25 @@
       }catch(error){setRow(card,'session','Could not verify the current session.','danger')}
     }else setRow(card,'session','Sign in to verify the production role.','warn');
 
-    const analytics=analyticsConfig();
-    const analyticsEndpoint=String(analytics.endpoint||'').replace(/\/$/,'');
-    result.analytics=analytics.enabled===true&&analyticsEndpoint===api;
-    setRow(card,'analytics',result.analytics?'Tracking is enabled and points at the current Command API.':analytics.enabled?'Tracking endpoint differs from the current Command API.':'Analytics tracking is not enabled in local site configuration.',result.analytics?'good':'warn');
+    try{
+      const {response,data}=await getJSON(LIVE_SITE_CONFIG+'?t='+Date.now());
+      const published=response.ok&&data&&typeof data==='object'?data.analytics||{}:{};
+      const publishedEndpoint=String(published.endpoint||'').replace(/\/$/,'');
+      const local=localAnalyticsConfig();
+      const localEndpoint=String(local.endpoint||'').replace(/\/$/,'');
+      result.analytics=response.ok&&published.enabled===true&&publishedEndpoint===api;
+      if(result.analytics)setRow(card,'analytics','Published tracking is enabled and points at the current Command API.','good');
+      else if(local.enabled===true&&localEndpoint===api)setRow(card,'analytics','Analytics is configured locally but has not been published to site.json yet.','warn');
+      else if(published.enabled===true)setRow(card,'analytics','Published tracking points at a different API endpoint.','warn');
+      else setRow(card,'analytics','Analytics tracking is not enabled in the published site.json.','warn');
+    }catch(error){setRow(card,'analytics','Could not verify the published site.json analytics configuration.','warn')}
 
-    result.cutover=!/\.lovable\.app$/i.test(new URL(api).hostname);
-    setRow(card,'cutover',result.cutover?`Current API: ${api}`:'Legacy Lovable API is still the active Command endpoint.',result.cutover?'good':'warn');
+    try{
+      result.cutover=!/\.lovable\.app$/i.test(new URL(api).hostname);
+      setRow(card,'cutover',result.cutover?`Current API: ${api}`:'Legacy Lovable API is still the active Command endpoint.',result.cutover?'good':'warn');
+    }catch{
+      setRow(card,'cutover','The configured Command API URL is invalid.','danger');
+    }
 
     result.domain=location.hostname===FINAL_DOMAIN||location.hostname.endsWith('.'+FINAL_DOMAIN);
     setRow(card,'domain',result.domain?`Running on ${location.hostname}.`:`Preview host: ${location.hostname}. Final target remains ${FINAL_DOMAIN}.`,result.domain?'good':'warn');
@@ -123,6 +136,7 @@
     observer.observe(document.documentElement,{childList:true,subtree:true});
     window.addEventListener('untoz:auth-change',()=>setTimeout(()=>currentCard&&run(currentCard),100));
     window.addEventListener('untoz:analytics-settings',()=>setTimeout(()=>currentCard&&run(currentCard),100));
+    window.addEventListener('untoz:publish-success',()=>setTimeout(()=>currentCard&&run(currentCard),700));
     enhance();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
