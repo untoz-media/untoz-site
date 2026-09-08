@@ -10,7 +10,7 @@
 
   function readJSON(key,fallback){try{const v=localStorage.getItem(key);return v?JSON.parse(v):fallback}catch{return fallback}}
   function cms(){return readJSON(CMS_KEY,{})||{}}
-  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]||m))}
   function fmt(v){if(!v)return 'Never';const d=new Date(v);return Number.isNaN(d.getTime())?'Never':d.toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'})}
   function rel(v){if(!v)return '';const d=new Date(v);const sec=Math.round((Date.now()-d.getTime())/1000);if(Math.abs(sec)<60)return 'just now';const min=Math.round(sec/60);if(Math.abs(min)<60)return `${Math.abs(min)}m ${min>=0?'ago':'from now'}`;const h=Math.round(min/60);if(Math.abs(h)<24)return `${Math.abs(h)}h ${h>=0?'ago':'from now'}`;const day=Math.round(h/24);return `${Math.abs(day)}d ${day>=0?'ago':'from now'}`}
   function activity(){return readJSON(ACTIVITY_KEY,[])||[]}
@@ -19,7 +19,7 @@
   }
   function signature(v){try{return JSON.stringify(v??null)}catch{return ''}}
   function changedSections(current,baseline){
-    const keys=[['posts','Posts'],['pages','Pages'],['homepage','Homepage'],['media','Media'],['categories','Categories'],['genres','Genres']];
+    const keys=[['posts','Posts'],['pages','Pages'],['homepage','Homepage'],['media','Media'],['categories','Categories'],['genres','Genres'],['brands','Brands']];
     if(!baseline)return keys.filter(([k])=>Array.isArray(current[k])&&current[k].length).map(([k,label])=>({key:k,label,changed:true}));
     return keys.filter(([k])=>signature(current[k]||[])!==signature(baseline[k]||[])).map(([key,label])=>({key,label,changed:true}));
   }
@@ -97,6 +97,7 @@
     window.addEventListener('untoz:publish-failure',e=>log('Publish failed',e.detail?.message||'Publishing error','!'));
     window.addEventListener('untoz:sync-success',()=>log('Live CMS synced','Local CMS refreshed from GitHub','↻'));
     window.addEventListener('untoz:auth-change',e=>log(e.detail?.signedIn?'Admin signed in':'Admin signed out',e.detail?.email||'Publishing session','●'));
+    window.addEventListener('untoz:brand-saved',e=>log(e.detail?.deleted?'Brand removed':e.detail?.created?'Brand created':'Brand saved',e.detail?.name||e.detail?.id||'Untoz brand network','◆'));
   }
   function watchNavigation(){document.addEventListener('click',e=>{const core=e.target.closest('.nav [data-view]');if(core)leavePublishing()},true)}
   function enhance(){installNav();installActivityButton();if(publishingOpen)renderPublishing()}
