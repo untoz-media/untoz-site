@@ -23,6 +23,7 @@
   function renderStories(){
     const grid=document.querySelector('#stories .stories-grid');if(!grid)return;
     const list=visible();
+    const viewAll=document.querySelector('#stories .stories-head>a');if(viewAll)viewAll.href=categoryUrl(active==='All'?'News':active);
     if(!list.length){grid.innerHTML='<div style="padding:50px 20px;color:#777">No published stories in this category yet.</div>';return}
     const lead=list[0],side=list.slice(1,4);
     grid.innerHTML=`<a class="lead-story" href="${articleUrl(lead)}"><img src="${esc(image(lead))}" alt=""><div class="card-shade"></div><span class="story-tag">${esc((lead.category||'UNTOZ').toUpperCase())}</span><div class="lead-copy"><h3>${esc(lead.title||'Untitled story')}</h3><p>${esc(lead.excerpt||'')}</p><b>Read story →</b></div></a><div class="story-list">${side.map(p=>`<a href="${articleUrl(p)}"><img src="${esc(image(p))}" alt=""><div><small>${esc((p.category||'UNTOZ').toUpperCase())}</small><h3>${esc(p.title||'Untitled story')}</h3><p>${esc(p.excerpt||'')}</p></div></a>`).join('')}</div>`;
