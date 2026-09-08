@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: untoz-scheduled-posts
@@ -15,6 +17,10 @@ concurrency:
 jobs:
   publish-due-posts:
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.scheduler.outputs.changed }}
+      count: ${{ steps.scheduler.outputs.count }}
+      posts: ${{ steps.scheduler.outputs.posts }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,3 +53,43 @@ jobs:
           if [ -n "${{ steps.scheduler.outputs.posts }}" ]; then
             echo "Posts: ${{ steps.scheduler.outputs.posts }}" >> "$GITHUB_STEP_SUMMARY"
           fi
+
+  deploy:
+    needs: publish-due-posts
+    if: needs.publish-due-posts.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout published main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
