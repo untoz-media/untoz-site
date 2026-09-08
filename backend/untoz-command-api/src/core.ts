@@ -28,7 +28,7 @@ export function cors(req: VercelRequest, res: VercelResponse) {
   const allowed = [...defaults, ...extra];
   if (origin && allowed.includes(origin)) res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Vary','Origin');
-  res.setHeader('Access-Control-Allow-Headers','authorization, content-type');
+  res.setHeader('Access-Control-Allow-Headers','authorization, content-type, x-bootstrap-secret');
   res.setHeader('Access-Control-Allow-Methods','GET,POST,PATCH,OPTIONS');
   return !origin || allowed.includes(origin);
 }
@@ -38,7 +38,7 @@ export function preflight(req:VercelRequest,res:VercelResponse){
   return res.status(204).end();
 }
 
-function adminClient(){
+export function serviceClient(){
   const url=process.env.SUPABASE_URL;
   const key=process.env.SUPABASE_SERVICE_ROLE_KEY;
   if(!url||!key) throw new Error('Missing Supabase service credentials');
@@ -56,7 +56,7 @@ export async function requireRole(req:VercelRequest, allowed:AppRole[]):Promise<
   const token=header.toLowerCase().startsWith('bearer ')?header.slice(7).trim():'';
   if(!token) return {status:401,error:'Missing bearer token'};
   let admin:SupabaseClient;
-  try{admin=adminClient()}catch{return {status:500,error:'Server misconfigured'}}
+  try{admin=serviceClient()}catch{return {status:500,error:'Server misconfigured'}}
   const {data,error}=await admin.auth.getUser(token);
   if(error||!data.user) return {status:401,error:'Invalid or expired session'};
   const {data:roles,error:roleError}=await admin.from('user_roles').select('role').eq('user_id',data.user.id);
@@ -85,7 +85,9 @@ async function appToken(){
   const keyPem=process.env.GITHUB_APP_PRIVATE_KEY?.replace(/\\n/g,'\n');
   const installation=process.env.GITHUB_APP_INSTALLATION_ID;
   if(appId&&keyPem&&installation){
-    const key=await importPKCS8(keyPem,'RS256');
+    const {createPrivateKey}=await import('node:crypto');
+    const normalized=createPrivateKey(keyPem).export({type:'pkcs8',format:'pem'}).toString();
+    const key=await importPKCS8(normalized,'RS256');
     const now=Math.floor(Date.now()/1000);
     const jwt=await new SignJWT({}).setProtectedHeader({alg:'RS256'}).setIssuedAt(now-60).setExpirationTime(now+540).setIssuer(appId).sign(key);
     const r=await fetch(`https://api.github.com/app/installations/${installation}/access_tokens`,{method:'POST',headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${jwt}`,'User-Agent':'untoz-command-api'}});
