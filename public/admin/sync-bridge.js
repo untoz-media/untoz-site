@@ -15,7 +15,11 @@
         title:p.title||'',slug:p.slug||'',type:p.category||'News',category:p.category||'News',genre:p.genre||'',author:p.author||'Untoz',date:p.date||'',status:p.status||'Draft',content:p.content||'',excerpt:p.excerpt||'',image:p.image||'',seo:p.seo||'',
         seo_title:p.seo_title||'',social_title:p.social_title||'',social_description:p.social_description||'',scheduled_at:p.scheduled_at||'',featured:!!p.featured,breaking:!!p.breaking,pinned:!!p.pinned,top_story:!!p.top_story,related:Array.isArray(p.related)?p.related:[],updated_at:p.updated_at||''
       })),
-      pages:(pages||[]).map((p,i)=>({id:Date.now()+1000+i,title:p.title||'Untitled page',slug:p.slug||'',status:p.status||'Draft',content:p.content||'',seo:p.seo||''})),
+      pages:(pages||[]).map((p,i)=>({
+        id:Date.now()+1000+i,
+        title:p.title||'Untitled page',slug:p.slug||'',status:p.status||'Draft',content:p.content||'',seo:p.seo||'',
+        styles:p.styles&&typeof p.styles==='object'?p.styles:{},blocks:Array.isArray(p.blocks)?p.blocks:[]
+      })),
       categories:Array.isArray(categories)?categories:[],
       genres:Array.isArray(genres)?genres:[],
       homepage:((homepage&&homepage.blocks)||[]).map((b,i)=>({id:b.id||`block-${Date.now()+i}`,type:normalizeBlockType(b.type),props:b.props||{}})),
