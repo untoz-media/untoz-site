@@ -41,7 +41,7 @@ jobs:
         run: |
           git config user.name "Untoz Scheduler"
           git config user.email "untoz-scheduler@users.noreply.github.com"
-          git add content/posts.json
+          git add -A
           git commit -m "Publish scheduled post(s)"
           git push origin HEAD:main
 
