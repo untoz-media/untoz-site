@@ -14,7 +14,7 @@
       posts:(posts||[]).map((p,i)=>({
         id:Date.now()+i,
         title:p.title||'',slug:p.slug||'',type:p.category||'News',category:p.category||'News',genre:p.genre||'',author:p.author||'Untoz',date:p.date||'',status:p.status||'Draft',content:p.content||'',excerpt:p.excerpt||'',image:p.image||'',seo:p.seo||'',
-        seo_title:p.seo_title||'',social_title:p.social_title||'',social_description:p.social_description||'',scheduled_at:p.scheduled_at||'',featured:!!p.featured,breaking:!!p.breaking,pinned:!!p.pinned,top_story:!!p.top_story,related:Array.isArray(p.related)?p.related:[],updated_at:p.updated_at||''
+        seo_title:p.seo_title||'',social_title:p.social_title||'',social_description:p.social_description||'',scheduled_at:p.scheduled_at||'',published_at:p.published_at||'',featured:!!p.featured,breaking:!!p.breaking,pinned:!!p.pinned,top_story:!!p.top_story,related:Array.isArray(p.related)?p.related:[],updated_at:p.updated_at||''
       })),
       pages:(pages||[]).map((p,i)=>({
         id:Date.now()+1000+i,
