@@ -4,7 +4,7 @@
   const RAW='https://raw.githubusercontent.com/untoz-media/untoz-site/main/content/pages/';
   const themeKey='untoz-theme';
 
-  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]));
+  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const nl=v=>esc(v).replace(/\n/g,'<br>');
   const safeHref=v=>{const s=String(v||'').trim();return /^(https?:\/\/|mailto:|\/|\.\/|\.\.\/|#)/i.test(s)?s:'#'};
   const safeMedia=v=>{const s=String(v||'').trim();return /^(https?:\/\/|\/|\.\/|\.\.\/)/i.test(s)?s:''};
