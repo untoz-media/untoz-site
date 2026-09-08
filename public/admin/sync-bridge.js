@@ -7,8 +7,8 @@
   function emit(name,detail={}){window.dispatchEvent(new CustomEvent(name,{detail}))}
   function normalizeBlockType(type){return String(type||'').split('-').map(x=>x?x[0].toUpperCase()+x.slice(1):'').join(' ')}
   async function loadLive(){
-    const [posts,categories,genres,homepage,pages,media]=await Promise.all([
-      get('posts.json'),get('categories.json'),get('genres.json'),get('homepage.json'),get('pages/index.json'),get('media.json')
+    const [posts,categories,genres,homepage,pages,media,brandData]=await Promise.all([
+      get('posts.json'),get('categories.json'),get('genres.json'),get('homepage.json'),get('pages/index.json'),get('media.json'),get('brands.json')
     ]);
     return {
       posts:(posts||[]).map((p,i)=>({
@@ -24,7 +24,8 @@
       categories:Array.isArray(categories)?categories:[],
       genres:Array.isArray(genres)?genres:[],
       homepage:((homepage&&homepage.blocks)||[]).map((b,i)=>({id:b.id||`block-${Date.now()+i}`,type:normalizeBlockType(b.type),props:b.props||{}})),
-      media:Array.isArray(media)?media:[]
+      media:Array.isArray(media)?media:[],
+      brands:Array.isArray(brandData?.brands)?brandData.brands.map(b=>({id:b.id||'',name:b.name||'',short:b.short||'',accent:b.accent||'#1f6ffa',tagline:b.tagline||'',description:b.description||'',categories:Array.isArray(b.categories)?b.categories:[],hero:b.hero||'',navigation:Array.isArray(b.navigation)?b.navigation:[],enabled:b.enabled!==false})):[]
     }
   }
   async function sync({ask=false,reload=true}={}){
