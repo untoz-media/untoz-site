@@ -1,0 +1,38 @@
+name: Untoz Command API CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/untoz-command-api/**'
+      - '.github/workflows/command-api-ci.yml'
+  pull_request:
+    paths:
+      - 'backend/untoz-command-api/**'
+      - '.github/workflows/command-api-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/untoz-command-api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/untoz-command-api/package.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Typecheck
+        run: npm run typecheck
