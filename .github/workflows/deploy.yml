@@ -3,6 +3,9 @@ name: Deploy Untoz site to GitHub Pages
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'backend/**'
+      - '.github/workflows/command-api-ci.yml'
   workflow_dispatch:
 
 permissions:
