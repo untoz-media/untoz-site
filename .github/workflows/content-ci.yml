@@ -3,8 +3,14 @@ name: Untoz Content CI
 on:
   pull_request:
     branches: [main]
+    paths-ignore:
+      - 'backend/**'
+      - '.github/workflows/command-api-ci.yml'
   push:
     branches: [main]
+    paths-ignore:
+      - 'backend/**'
+      - '.github/workflows/command-api-ci.yml'
   workflow_dispatch:
 
 permissions:
