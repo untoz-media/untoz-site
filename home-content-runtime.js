@@ -5,6 +5,14 @@
   const articleUrl=p=>new URL(`${slugify(p.category||'news')}/${slugify(p.slug||p.title||'story')}/`,base).href;
   const categoryUrl=name=>new URL(`${slugify(name)}/`,base).href;
   const categoryLinks={News:'news',Sports:'sports',Entertainment:'entertainment','Movies & Series':'movies-series',Gaming:'gaming',Music:'music',Space:'space'};
+  const subsidiaries=[
+    {name:'Untoz Pop',slug:'pop',icon:'☆',tone:'pink'},
+    {name:'Untoz Sports',slug:'sports',icon:'⚽',tone:'green'},
+    {name:'Untoz Gaming',slug:'gaming',icon:'⌘',tone:'purple'},
+    {name:'Untoz Space',slug:'space',icon:'◌',tone:'blue'},
+    {name:'Untoz Kids',slug:'kids',icon:'✦',tone:'orange'},
+    {name:'Untoz Archives',slug:'archives',icon:'▣',tone:'indigo'}
+  ];
   const fallbackImage='https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=85';
   let allPosts=[];
   let active='All';
@@ -16,9 +24,10 @@
 
   function wireCategoryRoutes(){
     document.querySelectorAll('.untoz-site-header__nav a,.untoz-site-header__mobile-nav a').forEach(a=>{const label=a.textContent.trim();if(categoryLinks[label])a.href=new URL(`${categoryLinks[label]}/`,base).href});
-    document.querySelectorAll('.explore-card').forEach(a=>{const label=a.querySelector('span')?.textContent.trim();if(categoryLinks[label])a.href=new URL(`${categoryLinks[label]}/`,base).href});
     document.querySelectorAll('#footer a').forEach(a=>{const label=a.textContent.trim();if(categoryLinks[label])a.href=new URL(`${categoryLinks[label]}/`,base).href});
     const viewAll=document.querySelector('#stories .stories-head>a');if(viewAll)viewAll.href=categoryUrl('News');
+    const cards=[...document.querySelectorAll('.explore-card')];
+    subsidiaries.forEach((sub,i)=>{const card=cards[i];if(!card)return;card.href=new URL(`${sub.slug}/`,base).href;card.className=`explore-card ${sub.tone}`;const icon=card.querySelector('div');const label=card.querySelector('span');if(icon)icon.textContent=sub.icon;if(label)label.textContent=sub.name});
   }
   function renderStories(){
     const grid=document.querySelector('#stories .stories-grid');if(!grid)return;
