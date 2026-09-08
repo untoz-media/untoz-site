@@ -26,6 +26,7 @@
     document.querySelectorAll('.untoz-site-header__nav a,.untoz-site-header__mobile-nav a').forEach(a=>{const label=a.textContent.trim();if(categoryLinks[label])a.href=new URL(`${categoryLinks[label]}/`,base).href});
     document.querySelectorAll('#footer a').forEach(a=>{const label=a.textContent.trim();if(categoryLinks[label])a.href=new URL(`${categoryLinks[label]}/`,base).href});
     const viewAll=document.querySelector('#stories .stories-head>a');if(viewAll)viewAll.href=categoryUrl('News');
+    const search=document.querySelector('.untoz-site-header__action.desktop-only');if(search)search.href=new URL('search/',base).href;
     const cards=[...document.querySelectorAll('.explore-card')];
     subsidiaries.forEach((sub,i)=>{const card=cards[i];if(!card)return;card.href=new URL(`${sub.slug}/`,base).href;card.className=`explore-card ${sub.tone}`;const icon=card.querySelector('div');const label=card.querySelector('span');if(icon)icon.textContent=sub.icon;if(label)label.textContent=sub.name});
   }
