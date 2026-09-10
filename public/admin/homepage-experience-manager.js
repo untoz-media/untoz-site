@@ -1,14 +1,16 @@
 (()=>{
   const KEY='untozHomepageExperience';
-  const CMS_KEY='untozCommandCMS';
   const nativeFetch=window.fetch.bind(window);
+  const scriptBase=new URL('.',document.currentScript?.src||location.href);
+  const homepageUrl=new URL('../../content/homepage.json',scriptBase);
+  const siteHome=new URL('../../',scriptBase);
   const defaults={
     manifesto:{eyebrow:'THIS IS UNTOZ',title:'Everything we do.',accent:'For everyone.',body:'We create stories, products, broadcasts and experiences across entertainment, news, sport and technology — connected by one idea: make media feel exciting again.'},
     brandRail:['Untoz+','Untoz News','Untoz Sports','Untoz Gaming','Untoz Pop','Untoz Kids','Untoz Space','Untoz Archives','Task Movies','Oiko'],
     productions:[
       {brand:'worldunited',eyebrow:'LIVE EVENT · AMSTERDAM',title:'WorldUnited 2026',tagline:'A WORLD OF SOUND',url:'https://worldunited.untoz.site/'},
       {brand:'awards',eyebrow:'AWARDS · SYDNEY',title:'Untoz Awards 2027',tagline:'CATCH THE LIGHT',url:'https://awards.untoz.site/'},
-      {brand:'kids',eyebrow:'UNTOZ KIDS',title:'Lila & Bobo',tagline:'Small adventures. Big imagination.',url:'../kids/'}
+      {brand:'kids',eyebrow:'UNTOZ KIDS',title:'Lila & Bobo',tagline:'Small adventures. Big imagination.',url:'./kids/'}
     ],
     products:[
       {brand:'aura',eyebrow:'LOCAL AI ASSISTANT',title:'AURA-1',body:'Your computer, finally working with you.',url:'https://aura.untoz.site/'},
@@ -27,8 +29,7 @@
   async function fetchLiveExperience(force=false){
     if(!force&&localStorage.getItem(KEY))return read();
     try{
-      const url=new URL('../../content/homepage.json',location.href);
-      const response=await nativeFetch(url,{cache:'no-store'});
+      const response=await nativeFetch(homepageUrl,{cache:'no-store'});
       if(!response.ok)throw new Error('Could not load homepage experience.');
       const json=await response.json();
       if(json?.experience&&typeof json.experience==='object'){save({...clone(defaults),...json.experience});return read();}
@@ -94,7 +95,7 @@
       save(next);
       const status=panel.querySelector('[data-hx-status]');if(status){status.textContent='Saved · '+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});}
     }));
-    panel.querySelector('[data-hx-preview]')?.addEventListener('click',()=>window.open('../','_blank'));
+    panel.querySelector('[data-hx-preview]')?.addEventListener('click',()=>window.open(siteHome.href,'_blank'));
     panel.querySelector('[data-hx-live]')?.addEventListener('click',async()=>{if(!confirm('Reload the Homepage Experience from the live site? Local experience edits will be replaced.'))return;await fetchLiveExperience(true);panel.remove();renderEditor();});
   }
 
