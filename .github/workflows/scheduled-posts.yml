@@ -5,6 +5,9 @@ on:
     - cron: '*/5 * * * *'
   workflow_dispatch:
 
+env:
+  PUBLIC_SITE_BASE: https://untoz-media.github.io/untoz-site
+
 permissions:
   contents: write
   pages: write
