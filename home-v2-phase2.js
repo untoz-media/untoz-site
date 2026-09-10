@@ -110,11 +110,48 @@
   }
 
   function wireMotion(){
-    const targets=document.querySelectorAll('.v2-manifesto,.v2p-brand-rail,.stories,.v2-productions,.v2-products,.v2-network,.v2-numbers,.lower,.v2-final-cta');
+    const targets=[...document.querySelectorAll('.v2-manifesto,.v2p-brand-rail,.stories,.v2-productions,.v2-products,.v2-network,.v2-numbers,.lower,.v2-final-cta')];
     targets.forEach((node,index)=>{node.dataset.reveal='';node.style.setProperty('--reveal-delay',`${Math.min(index*35,180)}ms`)});
-    if(!('IntersectionObserver'in window)||matchMedia('(prefers-reduced-motion: reduce)').matches){targets.forEach(node=>node.classList.add('is-visible'));return;}
-    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08,rootMargin:'0px 0px -7%'});
-    targets.forEach(node=>observer.observe(node));
+    if(!targets.length)return;
+
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reveal=node=>{
+      if(!node||node.classList.contains('is-visible'))return;
+      node.classList.add('is-visible');
+      observer?.unobserve(node);
+    };
+    const revealInViewport=()=>{
+      const topLimit=innerHeight*1.04;
+      const bottomLimit=-Math.max(80,innerHeight*.12);
+      targets.forEach(node=>{
+        if(node.classList.contains('is-visible'))return;
+        const rect=node.getBoundingClientRect();
+        if(rect.top<=topLimit&&rect.bottom>=bottomLimit)reveal(node);
+      });
+      if(targets.every(node=>node.classList.contains('is-visible'))){
+        removeEventListener('scroll',revealInViewport);
+        removeEventListener('resize',revealInViewport);
+      }
+    };
+
+    let observer=null;
+    if(!reduced&&'IntersectionObserver'in window){
+      observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)reveal(entry.target)}),{threshold:.05,rootMargin:'10% 0px -4%'});
+      targets.forEach(node=>observer.observe(node));
+    }
+
+    if(reduced){
+      targets.forEach(reveal);
+      return;
+    }
+
+    addEventListener('scroll',revealInViewport,{passive:true});
+    addEventListener('resize',revealInViewport,{passive:true});
+    requestAnimationFrame(()=>requestAnimationFrame(revealInViewport));
+
+    // Motion is progressive enhancement. Content must never remain inaccessible
+    // if a browser throttles or misses observer callbacks.
+    setTimeout(()=>targets.forEach(reveal),6500);
   }
 
   function wireSpotlights(){
