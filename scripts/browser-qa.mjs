@@ -59,6 +59,22 @@ function shouldScreenshot(routeId, viewportName) {
   return routeId === 'home' || routeId === 'about';
 }
 
+async function revealBeforeScreenshot(page) {
+  await page.evaluate(async () => {
+    const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const step = Math.max(360, Math.floor(innerHeight * 0.72));
+    const max = Math.max(0, document.documentElement.scrollHeight - innerHeight);
+    for (let y = 0; y <= max; y += step) {
+      scrollTo(0, y);
+      await wait(55);
+    }
+    scrollTo(0, max);
+    await wait(140);
+    scrollTo(0, 0);
+    await wait(140);
+  });
+}
+
 async function inspectPage(page, route, viewport, theme = 'light') {
   const url = new URL(route.path, baseURL).href;
   const jsErrors = [];
@@ -137,6 +153,7 @@ async function inspectPage(page, route, viewport, theme = 'light') {
   if (consoleErrors.length) warnings.push(`${viewport.name}/${route.id}: console error(s): ${consoleErrors.slice(0, 3).join(' | ')}`);
 
   if (theme === 'light' && shouldScreenshot(route.id, viewport.name)) {
+    await revealBeforeScreenshot(page);
     const filename = `${viewport.name}-${route.id}.png`.replace(/[^a-z0-9_.-]/gi, '-');
     await page.screenshot({ path: `${outDir}/${filename}`, fullPage: true });
   }
@@ -179,6 +196,7 @@ for (const route of darkRoutes) {
   const page = await context.newPage();
   try {
     await inspectPage(page, route, { name: 'fhd-dark', width: 1920, height: 1080 }, 'dark');
+    await revealBeforeScreenshot(page);
     await page.screenshot({ path: `${outDir}/fhd-dark-${route.id}.png`, fullPage: true });
   } catch (error) {
     fatal.push(`fhd-dark/${route.id}: ${String(error?.message || error)}`);
