@@ -41,7 +41,7 @@
     productions.className='section v2-productions';
     productions.id='productions';
     productions.innerHTML=`
-      <div class="v2-section-head"><div><small>FEATURED PRODUCTIONS</small><h2>Made by Untoz.</h2></div><a href="#footer">See productions ↗</a></div>
+      <div class="v2-section-head"><div><small>FEATURED PRODUCTIONS</small><h2>Made by Untoz.</h2></div><a class="v2-section-action" href="#universe">View all productions →</a></div>
       <div class="v2-production-grid">
         <a class="v2-production-card v2-production-wide" href="https://worldunited.untoz.site/"><div><small>LIVE EVENT · AMSTERDAM</small><h3>WorldUnited 2026</h3><p>A WORLD OF SOUND</p></div><b>↗</b></a>
         <a class="v2-production-card" href="https://awards.untoz.site/"><div><small>AWARDS · SYDNEY</small><h3>Untoz Awards 2027</h3><p>CATCH THE LIGHT</p></div><b>↗</b></a>
@@ -53,13 +53,16 @@
     products.className='v2-products';
     products.id='products';
     products.innerHTML=`
-      <div class="v2-products-intro"><small>UNTOZ PRODUCTS</small><h2>We don't just<br>make content.</h2><p>We build the tools, platforms and experiences around it.</p></div>
+      <div class="v2-products-head">
+        <div class="v2-products-intro"><small>UNTOZ PRODUCTS</small><h2>Tools, platforms and experiences.</h2><p>Technology built around the way Untoz creates, publishes and entertains.</p></div>
+        <a class="v2-section-action" href="#universe">View all products →</a>
+      </div>
       <div class="v2-product-list">
         <a href="https://aura.untoz.site/" class="v2-product"><span>01</span><i>A</i><div><small>LOCAL AI ASSISTANT</small><h3>AURA-1</h3><p>Your computer, finally working with you.</p></div><b>↗</b></a>
         <a href="https://github.com/untoz-media/untoz-clip" class="v2-product"><span>02</span><i>C</i><div><small>CREATOR SOFTWARE</small><h3>Untoz Clip</h3><p>Capture, clip and turn moments into content.</p></div><b>↗</b></a>
         <a href="https://untozplus.com/" class="v2-product"><span>03</span><i>+</i><div><small>STREAMING PLATFORM</small><h3>Untoz+</h3><p>Entertainment, channels and events in one place.</p></div><b>↗</b></a>
       </div>`;
-    document.getElementById('explore')?.insertAdjacentElement('afterend',products);
+    productions.insertAdjacentElement('afterend',products);
 
     const numbers=document.createElement('section');
     numbers.className='v2-numbers';
