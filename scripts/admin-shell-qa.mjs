@@ -78,18 +78,21 @@ for (const viewport of viewports) {
 
     await page.screenshot({ path: `${outDir}/${viewport.name}.png`, fullPage: true });
 
-    await page.locator('[data-view="homepage"]').click();
+    await page.locator('.nav [data-view="homepage"]').click();
     await page.locator('[data-homepage-studio]').waitFor({ state: 'visible', timeout: 8000 });
     await page.waitForTimeout(250);
 
-    const studio = await page.evaluate(() => ({
-      tabs: document.querySelectorAll('[data-homepage-studio] [data-hs-tab]').length,
-      sections: document.querySelectorAll('[data-homepage-studio] [data-hs-section]').length,
-      activeTab: document.querySelector('[data-homepage-studio] [data-hs-tab].active')?.dataset.hsTab || '',
-      legacyHidden: getComputedStyle(document.querySelector('.hx-panel')).display === 'none',
-      builderHidden: getComputedStyle(document.querySelector('.builder')).display === 'none',
-      overflowX: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-    }));
+    const studio = await page.evaluate(() => {
+      const legacy = document.querySelector('.hx-panel');
+      return {
+        tabs: document.querySelectorAll('[data-homepage-studio] [data-hs-tab]').length,
+        sections: document.querySelectorAll('[data-homepage-studio] [data-hs-section]').length,
+        activeTab: document.querySelector('[data-homepage-studio] [data-hs-tab].active')?.dataset.hsTab || '',
+        legacyHidden: !legacy || getComputedStyle(legacy).display === 'none',
+        builderHidden: getComputedStyle(document.querySelector('.builder')).display === 'none',
+        overflowX: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+      };
+    });
     if (studio.tabs !== 3) failures.push(`${viewport.name}: Homepage Studio rendered ${studio.tabs} tabs instead of 3`);
     if (studio.sections < 6) failures.push(`${viewport.name}: Homepage Studio rendered ${studio.sections} experience sections`);
     if (studio.activeTab !== 'experience') failures.push(`${viewport.name}: Homepage Studio defaulted to ${studio.activeTab || 'no tab'}`);
