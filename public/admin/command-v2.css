@@ -1,0 +1,118 @@
+/* Untoz Command V2 — shell and dashboard foundation */
+:root{
+  --cmd-blue:#1f6ffa;
+  --cmd-green:#0cdb46;
+  --cmd-orange:#ff7c04;
+  --cmd-ink:#0a0d12;
+  --cmd-muted:#707887;
+  --cmd-line:#e4e7ec;
+  --cmd-bg:#f3f5f7;
+  --cmd-card:#fff;
+  --cmd-sidebar:#080b10;
+  --cmd-sidebar-2:#10151d;
+}
+html,body{font-family:Montserrat,Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;background:var(--cmd-bg)!important;color:var(--cmd-ink)!important}
+body.command-v2{min-width:0;background:radial-gradient(circle at 92% 2%,rgba(31,111,250,.055),transparent 25%),var(--cmd-bg)!important}
+body.command-v2 .app{min-height:100vh;background:transparent}
+
+/* Sidebar */
+body.command-v2 .sidebar{
+  width:278px!important;
+  padding:24px 18px 18px!important;
+  background:
+    radial-gradient(circle at 0 0,rgba(31,111,250,.17),transparent 28%),
+    linear-gradient(180deg,var(--cmd-sidebar) 0%,var(--cmd-sidebar-2) 100%)!important;
+  border-right:1px solid rgba(255,255,255,.07);
+  overflow-y:auto;
+  scrollbar-width:thin;
+  scrollbar-color:#2a3341 transparent;
+}
+body.command-v2 .sidebar:before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:linear-gradient(90deg,var(--cmd-green) 0 33.333%,var(--cmd-blue) 33.333% 66.666%,var(--cmd-orange) 66.666%)}
+body.command-v2 .brand{position:relative;padding:10px 12px 30px!important;font-size:29px!important;font-weight:800!important;letter-spacing:-.065em!important;line-height:.9;color:#fff}
+body.command-v2 .brand span{color:#7ea2ff!important}
+body.command-v2 .brand:after{content:'COMMAND';display:block;margin-top:8px;color:#6f7988;font-size:8px;font-weight:800;letter-spacing:.22em}
+body.command-v2 .nav{gap:3px!important;padding-bottom:112px}
+body.command-v2 .nav button{position:relative;display:flex!important;align-items:center;gap:11px;min-height:42px;padding:10px 12px!important;border:1px solid transparent!important;border-radius:11px!important;color:#9aa4b3!important;font-size:11.5px!important;font-weight:600!important;letter-spacing:-.01em;transition:background .16s ease,color .16s ease,border-color .16s ease,transform .16s ease}
+body.command-v2 .nav button:before{content:attr(data-command-icon);display:grid;place-items:center;width:24px;height:24px;flex:0 0 24px;border-radius:7px;background:rgba(255,255,255,.045);color:#cbd3df;font-size:12px;font-weight:700}
+body.command-v2 .nav button:hover{background:rgba(255,255,255,.055)!important;border-color:rgba(255,255,255,.06)!important;color:#fff!important;transform:translateX(2px)}
+body.command-v2 .nav button.active{background:linear-gradient(135deg,#246fff,#194fe7)!important;border-color:rgba(255,255,255,.12)!important;color:#fff!important;box-shadow:0 10px 28px rgba(31,111,250,.24)}
+body.command-v2 .nav button.active:before{background:rgba(255,255,255,.16);color:#fff}
+body.command-v2 .command-v2-nav-label{margin:20px 12px 7px;color:#606b7b;font-size:7px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;pointer-events:none}
+body.command-v2 .command-v2-nav-label:first-of-type{margin-top:3px}
+body.command-v2 .sidebar-footer{left:18px!important;right:18px!important;bottom:16px!important;padding:12px 13px!important;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(255,255,255,.035);color:#717c8d!important;font-size:9px!important;backdrop-filter:blur(12px)}
+body.command-v2 .command-v2-side-status{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;color:#e9edf4;font-size:9px;font-weight:700}
+body.command-v2 .command-v2-side-status span{display:inline-flex;align-items:center;gap:6px}
+body.command-v2 .command-v2-side-status i{width:7px;height:7px;border-radius:50%;background:var(--cmd-green);box-shadow:0 0 0 4px rgba(12,219,70,.09)}
+
+/* Main shell and top bar */
+body.command-v2 .main{margin-left:278px!important;width:calc(100% - 278px)!important;min-width:0}
+body.command-v2 .topbar{height:84px!important;padding:0 36px!important;background:rgba(255,255,255,.86)!important;border-bottom:1px solid rgba(12,17,25,.08)!important;backdrop-filter:blur(18px);box-shadow:0 7px 26px rgba(20,29,43,.035)}
+body.command-v2 .topbar h1{position:relative;margin:0!important;padding-top:13px;font-size:21px!important;font-weight:700!important;letter-spacing:-.045em!important;line-height:1.1}
+body.command-v2 .topbar h1:before{content:attr(data-command-kicker);position:absolute;left:0;top:-3px;color:#8c94a1;font-size:7px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+body.command-v2 .top-actions{align-items:center;gap:7px!important}
+body.command-v2 .btn,body.command-v2 .top-actions button{min-height:36px;border-radius:10px!important;font-weight:650!important;box-shadow:none;transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease}
+body.command-v2 .btn:hover,body.command-v2 .top-actions button:hover{transform:translateY(-1px)}
+body.command-v2 .btn.primary{background:var(--cmd-blue)!important;border-color:var(--cmd-blue)!important;box-shadow:0 8px 22px rgba(31,111,250,.18)}
+body.command-v2 .content{max-width:1640px!important;padding:34px 38px 64px!important;margin:0 auto}
+body.command-v2 .view.active{animation:commandV2Enter .24s ease both}@keyframes commandV2Enter{from{opacity:.45;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* Shared surfaces */
+body.command-v2 .panel,body.command-v2 .stat,body.command-v2 .command-card{border-color:var(--cmd-line)!important;border-radius:18px!important;background:var(--cmd-card)!important;box-shadow:0 10px 34px rgba(20,29,43,.035)}
+body.command-v2 .panel{padding:24px!important;margin-top:16px!important}
+body.command-v2 .panel-head{margin-bottom:20px!important}
+body.command-v2 .panel h2,body.command-v2 .panel-head h2{font-size:18px!important;font-weight:700!important;letter-spacing:-.035em!important}
+body.command-v2 .eyebrow,body.command-v2 .stat small{font-size:8px!important;font-weight:800!important;letter-spacing:.15em!important;color:#8b93a0!important}
+body.command-v2 .stat{padding:22px!important}
+body.command-v2 .stat strong{font-size:34px!important;font-weight:700!important}
+body.command-v2 .badge{padding:5px 9px!important;font-weight:700!important;background:#edf3ff!important;color:#195cf0!important}
+body.command-v2 .quick{gap:12px!important}
+body.command-v2 .quick button{min-height:76px;border-radius:14px!important;border-color:var(--cmd-line)!important;background:#fafbfc!important;font-weight:650!important;transition:.16s ease}
+body.command-v2 .quick button:hover{background:#f5f8ff!important;border-color:#bfcfff!important;transform:translateY(-2px)}
+
+/* Forms and tables */
+body.command-v2 .field label{font-size:8px!important;font-weight:800!important;letter-spacing:.11em!important;color:#7d8593!important}
+body.command-v2 .field input,body.command-v2 .field textarea,body.command-v2 .field select{border-color:#dfe3e9!important;border-radius:11px!important;padding:12px 13px!important;background:#fbfcfd!important;font-weight:500!important;transition:border-color .16s ease,box-shadow .16s ease,background .16s ease}
+body.command-v2 .field input:focus,body.command-v2 .field textarea:focus,body.command-v2 .field select:focus{outline:0!important;border-color:var(--cmd-blue)!important;background:#fff!important;box-shadow:0 0 0 3px rgba(31,111,250,.10)!important}
+body.command-v2 .table{border-collapse:separate!important;border-spacing:0}
+body.command-v2 .table th{padding:11px 12px!important;border-bottom:1px solid #e8ebef!important;color:#89919e!important;font-size:8px!important;font-weight:800!important;letter-spacing:.11em!important}
+body.command-v2 .table td{padding:14px 12px!important;border-bottom:1px solid #eff1f4!important;font-size:11px!important}
+body.command-v2 .table tbody tr{transition:background .14s ease}
+body.command-v2 .table tbody tr:hover{background:#fafcff}
+
+/* Dashboard V2 */
+body.command-v2 .command-overview{gap:16px!important}
+body.command-v2 .command-welcome{min-height:190px;padding:32px 34px!important;border-radius:22px!important;background:radial-gradient(circle at 86% 15%,rgba(31,111,250,.42),transparent 24%),radial-gradient(circle at 68% 130%,rgba(12,219,70,.13),transparent 34%),linear-gradient(135deg,#080c12 0%,#101723 62%,#15213a 100%)!important;box-shadow:0 22px 55px rgba(12,20,34,.14)}
+body.command-v2 .command-welcome:before{content:'';position:absolute;left:0;top:0;width:5px;height:100%;background:linear-gradient(var(--cmd-green) 0 33.3%,var(--cmd-blue) 33.3% 66.6%,var(--cmd-orange) 66.6%)}
+body.command-v2 .command-welcome:after{width:420px!important;height:420px!important;right:-190px!important;top:-240px!important;border:1px solid rgba(255,255,255,.08);background:transparent!important;box-shadow:0 0 0 48px rgba(31,111,250,.025),0 0 0 96px rgba(31,111,250,.018)}
+body.command-v2 .command-welcome h2{margin:7px 0 8px!important;font-size:38px!important;font-weight:650!important;letter-spacing:-.055em!important}
+body.command-v2 .command-welcome p{font-size:11.5px!important;line-height:1.6!important;color:#9ca8ba!important}
+body.command-v2 .command-live-status{min-width:218px!important;padding:13px 15px!important;border-radius:14px!important;background:rgba(255,255,255,.055)!important}
+body.command-v2 .command-metrics{gap:10px!important}
+body.command-v2 .command-metric{min-height:128px;padding:19px 20px!important;border-radius:16px!important;border-color:var(--cmd-line)!important;box-shadow:0 8px 28px rgba(20,29,43,.028)}
+body.command-v2 .command-metric span{font-size:8px!important;font-weight:800!important;letter-spacing:.1em!important}
+body.command-v2 .command-metric strong{font-size:36px!important;font-weight:700!important;margin:12px 0 10px!important}
+body.command-v2 .command-metric small{font-size:9px!important;font-weight:650!important}
+body.command-v2 .command-dashboard-grid{gap:12px!important}
+body.command-v2 .command-card{padding:22px!important}
+body.command-v2 .command-card-head h3{font-size:17px!important;font-weight:700!important}
+body.command-v2 .command-action-grid{gap:10px!important}
+body.command-v2 .command-action-grid button{min-height:82px;padding:14px!important;border-radius:13px!important;background:#fafbfc!important}
+body.command-v2 .command-action-grid button:hover{background:#f4f7ff!important;transform:translateY(-1px)}
+body.command-v2 .command-action-grid b{background:#10151d!important;font-weight:600!important}
+body.command-v2 .command-action-grid span{font-weight:700!important}
+body.command-v2 .command-recent-item{padding:13px 6px!important;border-radius:10px}
+body.command-v2 .command-recent-item:hover{background:#f7f9fc!important}
+body.command-v2 .command-content-copy b{font-weight:650!important}
+
+/* Builder gets more room and calmer hierarchy. */
+body.command-v2 .builder{grid-template-columns:230px minmax(360px,1fr) 310px!important;min-height:720px!important;border-radius:18px!important;border-color:var(--cmd-line)!important;background:#f6f8fa!important;box-shadow:0 12px 38px rgba(20,29,43,.035)}
+body.command-v2 .builder-side,body.command-v2 .builder-inspector{padding:20px!important}
+body.command-v2 .block{border-radius:10px!important;background:#f8f9fb!important;font-weight:600!important}
+body.command-v2 .canvas{padding:20px!important}
+body.command-v2 .canvas-inner{min-height:645px!important;border-radius:14px!important;background:#fff!important}
+body.command-v2 .canvas-block{padding:17px!important;border-radius:12px!important}
+body.command-v2 .canvas-block h2{font-weight:650!important}
+
+@media(max-width:1180px){body.command-v2 .sidebar{width:226px!important}body.command-v2 .main{margin-left:226px!important;width:calc(100% - 226px)!important}body.command-v2 .content{padding:28px 26px 54px!important}body.command-v2 .builder{grid-template-columns:190px minmax(0,1fr)!important}}
+@media(max-width:760px){body.command-v2 .sidebar{position:static!important;width:100%!important;padding:14px 12px!important;overflow:visible}body.command-v2 .brand{padding:8px 8px 16px!important}body.command-v2 .nav{display:flex!important;gap:5px!important;overflow-x:auto;padding:0 0 8px!important;scrollbar-width:none}body.command-v2 .nav::-webkit-scrollbar{display:none}body.command-v2 .command-v2-nav-label{display:none}body.command-v2 .nav button{flex:0 0 auto;min-height:38px;padding:7px 10px!important}body.command-v2 .nav button:before{display:none}body.command-v2 .sidebar-footer{display:none!important}body.command-v2 .main{margin-left:0!important;width:100%!important}body.command-v2 .topbar{height:72px!important;padding:0 16px!important}body.command-v2 .content{padding:18px 12px 44px!important}body.command-v2 .command-welcome{min-height:0;padding:24px!important}body.command-v2 .command-welcome h2{font-size:30px!important}body.command-v2 .command-metrics{grid-template-columns:1fr 1fr!important}body.command-v2 .builder{grid-template-columns:1fr!important}.command-v2 .builder-side{display:none!important}}
+@media(max-width:520px){body.command-v2 .command-metrics{grid-template-columns:1fr!important}body.command-v2 .command-live-status{min-width:0!important}body.command-v2 .panel{padding:18px!important}body.command-v2 .top-actions{gap:4px!important}body.command-v2 .top-actions .btn{padding:8px 9px!important;font-size:10px!important}}

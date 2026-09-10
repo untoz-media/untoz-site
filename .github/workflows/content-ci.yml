@@ -96,6 +96,12 @@ jobs:
           UNTOZ_QA_OUT: qa-artifacts
         run: node scripts/browser-qa.mjs
 
+      - name: Run Command V2 admin QA
+        env:
+          UNTOZ_QA_BASE_URL: http://127.0.0.1:4173/
+          UNTOZ_QA_OUT: qa-artifacts
+        run: node scripts/admin-shell-qa.mjs
+
       - name: Show preview log on failure
         if: failure()
         run: cat /tmp/untoz-preview.log || true
@@ -113,4 +119,4 @@ jobs:
         if: always()
         run: |
           echo "## Untoz Browser QA" >> "$GITHUB_STEP_SUMMARY"
-          echo "Chromium checks cover the production dist in FHD, QHD, 4K, tablet, mobile and selected dark-mode routes." >> "$GITHUB_STEP_SUMMARY"
+          echo "Chromium checks cover the production dist in FHD, QHD, 4K, tablet, mobile, selected dark-mode routes and the authenticated Command V2 shell." >> "$GITHUB_STEP_SUMMARY"
