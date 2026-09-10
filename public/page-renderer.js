@@ -4,7 +4,6 @@
   const base=new URL('../',location.href);
   const RAW='https://raw.githubusercontent.com/untoz-media/untoz-site/main/content/pages/';
   const themeKey='untoz-theme';
-
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const nl=v=>esc(v).replace(/\n/g,'<br>');
   const safeHref=v=>{const s=String(v||'').trim();return /^(https?:\/\/|mailto:|\/|\.\/|\.\.\/|#)/i.test(s)?s:'#'};
@@ -13,8 +12,7 @@
   const font=v=>['inherit','Arial, sans-serif','Georgia, serif','ui-monospace, monospace'].includes(v)?v:'inherit';
   const color=v=>/^#[0-9a-f]{3,8}$/i.test(String(v||''))?v:'';
   const href=p=>new URL(p,base).href;
-
-  function installV2Styles(){if(document.querySelector('link[data-untoz-page-v2]'))return;const link=document.createElement('link');link.rel='stylesheet';link.href=href('page-v2.css');link.dataset.untozPageV2='true';document.head.appendChild(link)}
+  function installV2Styles(){['page-v2.css','page-v2-states.css'].forEach(file=>{if(document.querySelector(`link[data-untoz-page-style="${file}"]`))return;const link=document.createElement('link');link.rel='stylesheet';link.href=href(file);link.dataset.untozPageStyle=file;document.head.appendChild(link)})}
   installV2Styles();
   function defaultStyles(){return {backgroundMode:'solid',background:'#ffffff',gradientFrom:'#ffffff',gradientTo:'#eef3ff',backgroundImage:'',textColor:'#111111',accentColor:'#1f6ffa',surfaceColor:'#ffffff',maxWidth:'1240',font:'inherit',paddingTop:64,paddingBottom:80,gap:22,radius:24,showHeader:true,showFooter:true}}
   function pageBackground(s){if(s.backgroundMode==='gradient')return `linear-gradient(135deg,${color(s.gradientFrom)||'#fff'},${color(s.gradientTo)||'#eef3ff'})`;if(s.backgroundMode==='image'&&safeMedia(s.backgroundImage))return `linear-gradient(rgba(0,0,0,.08),rgba(0,0,0,.08)),url("${safeMedia(s.backgroundImage).replace(/"/g,'')}")`;return color(s.background)||'#fff'}
