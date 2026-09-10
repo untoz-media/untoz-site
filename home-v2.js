@@ -12,9 +12,13 @@
     if(hero){
       hero.classList.add('v2-hero');
       hero.dataset.accent='blue';
+      hero.setAttribute('aria-roledescription','carousel');
+      hero.setAttribute('aria-label','Featured Untoz stories');
       const copy=hero.querySelector('.hero-copy');
       copy?.classList.add('v2-hero-copy');
       hero.querySelector('.hero-kicker')?.classList.add('v2-hero-side');
+      document.getElementById('heroPrev')?.setAttribute('aria-label','Previous featured slide');
+      document.getElementById('heroNext')?.setAttribute('aria-label','Next featured slide');
     }
 
     const live=document.querySelector('.live-strip');
@@ -76,8 +80,17 @@
 
     let current=0;
     const dots=[...document.querySelectorAll('.hero-dots button')];
+    dots.forEach((btn,i)=>{
+      btn.setAttribute('aria-label',`Show featured slide ${i+1}`);
+      btn.setAttribute('aria-current',btn.classList.contains('active')?'true':'false');
+    });
     const accent=['blue','orange','purple'];
-    const syncAccent=()=>{current=dots.findIndex(x=>x.classList.contains('active'));if(current<0)current=0;if(hero)hero.dataset.accent=accent[current%accent.length]};
+    const syncAccent=()=>{
+      current=dots.findIndex(x=>x.classList.contains('active'));
+      if(current<0)current=0;
+      if(hero)hero.dataset.accent=accent[current%accent.length];
+      dots.forEach((btn,i)=>btn.setAttribute('aria-current',i===current?'true':'false'));
+    };
     dots.forEach(btn=>btn.addEventListener('click',()=>setTimeout(syncAccent,0)));
     document.getElementById('heroNext')?.addEventListener('click',()=>setTimeout(syncAccent,0));
     document.getElementById('heroPrev')?.addEventListener('click',()=>setTimeout(syncAccent,0));
