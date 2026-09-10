@@ -1,0 +1,155 @@
+/* Untoz Homepage V2 — post-launch hierarchy balance */
+
+/* Align the floating site header with the V2 page/hero canvas. */
+.untoz-v2 .untoz-site-header{
+  width:min(1540px,calc(100% - 36px));
+  margin-top:14px;
+  margin-bottom:10px;
+}
+.untoz-v2 .v2-hero{
+  border-radius:24px!important;
+  overflow:hidden;
+}
+
+/* The V2 should feel editorial, not uniformly heavy. */
+.untoz-v2 .v2-hero-copy h1{font-weight:800!important;letter-spacing:-.065em!important}
+.untoz-v2 .v2-hero-copy p{font-weight:450!important;line-height:1.55!important}
+.untoz-v2 .v2-manifesto{margin-bottom:72px}
+.untoz-v2 .v2-infinity{font-weight:800}
+.untoz-v2 .v2-manifesto h2{font-size:clamp(46px,5.2vw,78px);font-weight:700;line-height:.88;letter-spacing:-.065em}
+.untoz-v2 .v2-manifesto p{font-size:12px;line-height:1.75}
+.untoz-v2 .v2-section-head h2,
+.untoz-v2 .section-title h2,
+.untoz-v2 .stories-head h2{font-weight:700!important;letter-spacing:-.045em!important}
+.untoz-v2 .v2-network-card>div{font-weight:750}
+.untoz-v2 .v2-network-card>span{font-weight:650!important}
+.untoz-v2 .lead-copy h3{font-weight:750!important}
+.untoz-v2 .story-list h3{font-weight:650!important;line-height:1.25!important}
+
+/* Productions: return as an explicit editorial section. */
+.untoz-v2 .v2-productions{
+  display:block!important;
+  visibility:visible!important;
+  padding-top:68px!important;
+  margin-bottom:18px;
+}
+.untoz-v2 .v2-productions .v2-section-head,
+.untoz-v2 .v2-products-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+}
+.untoz-v2 .v2-section-action{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  padding:0 16px;
+  border:1px solid var(--v2-border);
+  border-radius:999px;
+  background:var(--v2-card);
+  color:var(--v2-ink);
+  font-size:9px;
+  font-weight:700;
+  text-decoration:none;
+  box-shadow:0 8px 22px rgba(11,20,35,.05);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.untoz-v2 .v2-section-action:hover{transform:translateY(-2px);border-color:rgba(31,111,250,.4);box-shadow:0 12px 28px rgba(31,111,250,.1)}
+.untoz-v2 .v2-production-card h3{font-weight:750;letter-spacing:-.045em}
+.untoz-v2 .v2-production-card small{font-weight:750}
+
+/* Products now reads as a normal homepage section, not a detached mega-banner. */
+.untoz-v2 .v2-products{
+  display:grid!important;
+  visibility:visible!important;
+  margin:34px 0 58px;
+  padding:38px 42px 42px;
+  grid-template-columns:1fr;
+  gap:28px;
+  border-radius:22px;
+}
+.untoz-v2 .v2-products-head{
+  position:relative;
+  z-index:2;
+  padding-bottom:22px;
+  border-bottom:1px solid rgba(255,255,255,.14);
+}
+.untoz-v2 .v2-products-intro{max-width:760px}
+.untoz-v2 .v2-products-intro h2{
+  margin:8px 0 12px;
+  font-size:clamp(38px,4vw,62px);
+  font-weight:700;
+  line-height:.92;
+  letter-spacing:-.055em;
+}
+.untoz-v2 .v2-products-intro p{max-width:520px;font-size:10.5px;line-height:1.65}
+.untoz-v2 .v2-products .v2-section-action{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#fff;box-shadow:none}
+.untoz-v2 .v2-product-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;border-top:0;position:relative;z-index:2}
+.untoz-v2 .v2-product{
+  min-height:164px;
+  padding:22px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  border-radius:16px;
+  display:grid;
+  grid-template-columns:50px 1fr auto;
+  grid-template-rows:auto 1fr;
+  gap:16px;
+  align-items:start;
+  background:rgba(255,255,255,.035);
+}
+.untoz-v2 .v2-product>span{display:none}
+.untoz-v2 .v2-product>i{grid-row:1 / span 2;width:46px;height:46px;border-radius:13px}
+.untoz-v2 .v2-product>div{align-self:center}
+.untoz-v2 .v2-product h3{font-size:20px;font-weight:700;letter-spacing:-.035em}
+.untoz-v2 .v2-product p{font-size:8.5px;line-height:1.5}
+.untoz-v2 .v2-product>b{align-self:center}
+
+/* Numbers stay strong, but not black-heavy. */
+.untoz-v2 .v2-numbers h2{font-weight:700}
+.untoz-v2 .v2-numbers strong{font-weight:750}
+
+/* Final CTA: same idea, much quieter footprint. */
+.untoz-v2 .v2-final-cta{
+  min-height:280px;
+  padding:38px 42px;
+  margin:46px 0 18px;
+  border-radius:22px;
+}
+.untoz-v2 .v2-final-cta h2{
+  max-width:980px;
+  font-size:clamp(46px,5.2vw,76px);
+  font-weight:700;
+  line-height:.82;
+  letter-spacing:-.065em;
+}
+.untoz-v2 .v2-final-cta:after{right:8px;bottom:-95px;font-size:300px}
+.untoz-v2 .v2-final-cta p{font-size:10px}
+
+:root[data-theme=dark] .untoz-v2 .v2-section-action{background:#151a21}
+:root[data-theme=dark] .untoz-v2 .v2-products .v2-section-action{background:rgba(255,255,255,.07)}
+
+@media(max-width:900px){
+  .untoz-v2 .untoz-site-header{width:calc(100% - 20px);margin-bottom:8px}
+  .untoz-v2 .v2-product-list{grid-template-columns:1fr}
+  .untoz-v2 .v2-product{min-height:112px}
+}
+
+@media(max-width:760px){
+  .untoz-v2 .v2-hero{border-radius:18px!important}
+  .untoz-v2 .v2-products{padding:30px 24px 28px}
+  .untoz-v2 .v2-productions .v2-section-head,.untoz-v2 .v2-products-head{align-items:flex-start}
+  .untoz-v2 .v2-final-cta{min-height:245px;padding:30px 26px}
+  .untoz-v2 .v2-final-cta h2{font-size:clamp(42px,11vw,60px)}
+}
+
+@media(max-width:520px){
+  .untoz-v2 .untoz-site-header{width:calc(100% - 12px);margin-bottom:6px}
+  .untoz-v2 .v2-products-head,.untoz-v2 .v2-productions .v2-section-head{display:block}
+  .untoz-v2 .v2-section-action{margin-top:14px}
+  .untoz-v2 .v2-product{grid-template-columns:42px 1fr auto;padding:18px!important}
+  .untoz-v2 .v2-final-cta{min-height:220px}
+  .untoz-v2 .v2-final-cta:after{font-size:220px;bottom:-70px}
+}
