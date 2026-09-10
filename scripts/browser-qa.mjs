@@ -9,6 +9,7 @@ await fs.mkdir(outDir, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
 const results = [];
+const interactions = [];
 const fatal = [];
 const warnings = [];
 
@@ -141,6 +142,23 @@ async function inspectPage(page, route, viewport, theme = 'light') {
   }
 }
 
+async function interactionCheck(name, viewport, path, test) {
+  const context = await browser.newContext({ viewport, deviceScaleFactor: 1 });
+  const page = await context.newPage();
+  try {
+    await page.goto(new URL(path, baseURL).href, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+    await page.waitForTimeout(900);
+    const detail = await test(page);
+    interactions.push({ name, passed: true, detail: detail || 'ok' });
+  } catch (error) {
+    const message = String(error?.message || error);
+    interactions.push({ name, passed: false, detail: message });
+    fatal.push(`interaction/${name}: ${message}`);
+  } finally {
+    await context.close();
+  }
+}
+
 for (const viewport of viewports) {
   for (const route of routes) {
     const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height }, deviceScaleFactor: 1 });
@@ -169,6 +187,55 @@ for (const route of darkRoutes) {
   }
 }
 
+await interactionCheck('homepage-carousel', { width: 1920, height: 1080 }, '', async page => {
+  const dots = page.locator('.hero-dots button');
+  if (await dots.count() < 2) throw new Error('hero carousel dots were not rendered');
+  const firstCurrent = await page.locator('.hero-dots button[aria-current="true"]').getAttribute('data-slide');
+  await page.locator('#heroNext').click();
+  await page.waitForTimeout(120);
+  const nextCurrent = await page.locator('.hero-dots button[aria-current="true"]').getAttribute('data-slide');
+  if (firstCurrent === nextCurrent) throw new Error('next control did not change active slide');
+  const unlabeled = await dots.evaluateAll(items => items.filter(item => !item.getAttribute('aria-label')).length);
+  if (unlabeled) throw new Error(`${unlabeled} carousel dot(s) are missing aria-label`);
+  return `slide ${firstCurrent} → ${nextCurrent}`;
+});
+
+await interactionCheck('mobile-navigation', { width: 390, height: 844 }, '', async page => {
+  const toggle = page.locator('#siteMenuToggle');
+  await toggle.click();
+  await page.waitForTimeout(80);
+  if (!await page.locator('#siteMobileNav.open').isVisible()) throw new Error('mobile navigation did not open');
+  await toggle.click();
+  await page.waitForTimeout(80);
+  if (await page.locator('#siteMobileNav.open').count()) throw new Error('mobile navigation did not close');
+  return 'open/close passed';
+});
+
+await interactionCheck('search-brand-filter', { width: 1440, height: 900 }, 'search/?q=Untoz', async page => {
+  const brandsButton = page.locator('[data-search-filter="Brands"]');
+  await brandsButton.click();
+  await page.waitForTimeout(150);
+  if (!await brandsButton.evaluate(el => el.classList.contains('active'))) throw new Error('Brands filter did not become active');
+  const resultTypes = await page.locator('.search-result-type').allTextContents();
+  if (resultTypes.some(type => type.trim() !== 'Brand')) throw new Error('Brands filter returned a non-brand result');
+  return `${resultTypes.length} brand result(s)`;
+});
+
+await interactionCheck('institutional-theme-toggle', { width: 1440, height: 900 }, 'about/', async page => {
+  const before = await page.evaluate(() => document.documentElement.dataset.theme || 'light');
+  await page.locator('#pageThemeToggle').click();
+  await page.waitForTimeout(100);
+  const after = await page.evaluate(() => document.documentElement.dataset.theme || 'light');
+  if (before === after) throw new Error('theme toggle did not change document theme');
+  return `${before} → ${after}`;
+});
+
+await interactionCheck('contact-mail-link', { width: 1440, height: 900 }, 'contact/', async page => {
+  const count = await page.locator('a[href^="mailto:"]').count();
+  if (!count) throw new Error('contact page has no mailto action');
+  return `${count} mail action(s)`;
+});
+
 await browser.close();
 
 const report = {
@@ -177,18 +244,21 @@ const report = {
   routes: routes.map(r => r.path || '/'),
   viewports,
   checks: results.length,
+  interactionChecks: interactions.length,
   fatal: [...new Set(fatal)],
   warnings: [...new Set(warnings)],
+  interactions,
   results,
 };
 
 await fs.writeFile(`${outDir}/qa-results.json`, JSON.stringify(report, null, 2));
 
-console.log(`\nUntoz Browser QA: ${results.length} page checks`);
+console.log(`\nUntoz Browser QA: ${results.length} page checks + ${interactions.length} interaction checks`);
 console.log(`Fatal issues: ${report.fatal.length}`);
 for (const issue of report.fatal) console.error(`  ✖ ${issue}`);
 console.log(`Warnings: ${report.warnings.length}`);
 for (const warning of report.warnings.slice(0, 40)) console.warn(`  ⚠ ${warning}`);
+for (const interaction of interactions) console.log(`  ${interaction.passed ? '✓' : '✖'} ${interaction.name}: ${interaction.detail}`);
 if (report.warnings.length > 40) console.warn(`  … ${report.warnings.length - 40} more warning(s) in qa-results.json`);
 
 if (report.fatal.length) process.exit(1);
