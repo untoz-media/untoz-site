@@ -1,0 +1,27 @@
+/* Untoz Command V2 — session actions belong to the application chrome. */
+body.command-v2 .top-actions .command-v2-session-action{
+  position:static!important;
+  inset:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  z-index:auto!important;
+  min-height:36px!important;
+  margin:0!important;
+  padding:9px 12px!important;
+  border:1px solid #dfe3e9!important;
+  border-radius:10px!important;
+  background:#fff!important;
+  color:#151a21!important;
+  font:650 10.5px/1 Montserrat,system-ui,sans-serif!important;
+  box-shadow:none!important;
+  transform:none!important;
+  white-space:nowrap!important;
+}
+body.command-v2 .top-actions .command-v2-session-action:hover{background:#f5f7fa!important;border-color:#cbd2dc!important;transform:translateY(-1px)!important}
+body.command-v2 .top-actions .command-v2-session-action[data-command-session="sync"]{color:#1453d8!important;background:#f4f7ff!important;border-color:#d7e2ff!important}
+body.command-v2 .top-actions .command-v2-session-action[data-command-session="signout"]{color:#6b7280!important}
+body.command-v2 #command-sync-toast{bottom:24px!important}
+@media(max-width:760px){
+  body.command-v2 .top-actions .command-v2-session-action{flex:0 0 auto!important;min-height:34px!important;padding:8px 10px!important}
+  body.command-v2 #command-sync-toast{bottom:16px!important;max-width:calc(100% - 24px);white-space:normal;text-align:center}
+}
