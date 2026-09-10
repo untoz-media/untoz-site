@@ -36,7 +36,7 @@ for (const viewport of viewports) {
   const page = await context.newPage();
   try {
     const response = await page.goto(new URL('admin/', baseURL).href, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-    await page.waitForTimeout(1300);
+    await page.waitForTimeout(1500);
 
     const metrics = await page.evaluate(() => {
       const root = document.documentElement;
@@ -44,6 +44,7 @@ for (const viewport of viewports) {
       const auth = document.getElementById('command-auth-gate');
       const sidebar = document.querySelector('.sidebar');
       const main = document.querySelector('.main');
+      const sessionActions = [...document.querySelectorAll('.topbar .top-actions .command-v2-session-action')];
       return {
         commandV2: body.classList.contains('command-v2'),
         authHidden: !!auth && auth.hidden,
@@ -52,6 +53,8 @@ for (const viewport of viewports) {
         dashboard: !!document.querySelector('[data-command-overview]'),
         navButtons: document.querySelectorAll('.nav [data-view]').length,
         navLabels: document.querySelectorAll('.command-v2-nav-label').length,
+        sessionActions: sessionActions.map(node => node.textContent?.trim() || ''),
+        floatingSessionActions: sessionActions.filter(node => getComputedStyle(node).position === 'fixed').length,
         overflowX: Math.max(root.scrollWidth, body.scrollWidth) - innerWidth,
         fontFamily: getComputedStyle(body).fontFamily,
         sidebarWidth: sidebar ? Math.round(sidebar.getBoundingClientRect().width) : 0,
@@ -68,6 +71,8 @@ for (const viewport of viewports) {
     if (!metrics.sidebar || !metrics.topbar || !metrics.dashboard) failures.push(`${viewport.name}: core admin shell/dashboard did not render`);
     if (metrics.navButtons < 8) failures.push(`${viewport.name}: only ${metrics.navButtons} navigation actions rendered`);
     if (metrics.navLabels < 3) failures.push(`${viewport.name}: navigation groups were not enhanced`);
+    if (!metrics.sessionActions.some(label => label.includes('Sync live'))) failures.push(`${viewport.name}: Sync live was not integrated into the topbar`);
+    if (metrics.floatingSessionActions) failures.push(`${viewport.name}: ${metrics.floatingSessionActions} session action(s) are still fixed over content`);
     if (metrics.overflowX > 4) failures.push(`${viewport.name}: horizontal overflow ${metrics.overflowX}px`);
     if (!metrics.fontFamily.toLowerCase().includes('montserrat')) failures.push(`${viewport.name}: Command V2 font stack is ${metrics.fontFamily}`);
     if (viewport.name === 'admin-desktop' && metrics.sidebarWidth < 250) failures.push(`${viewport.name}: desktop sidebar is unexpectedly narrow (${metrics.sidebarWidth}px)`);
@@ -85,7 +90,7 @@ await browser.close();
 await fs.writeFile(`${outDir}/admin-shell-qa.json`, JSON.stringify({ generatedAt: new Date().toISOString(), baseURL, failures, results }, null, 2));
 
 console.log(`Untoz Command V2 QA: ${results.length} viewport checks`);
-for (const result of results) console.log(`  ✓ ${result.viewport}: ${result.navButtons} nav actions, ${result.navLabels} groups, overflow ${result.overflowX}px`);
+for (const result of results) console.log(`  ✓ ${result.viewport}: ${result.navButtons} nav actions, ${result.navLabels} groups, ${result.sessionActions.length} session action(s), overflow ${result.overflowX}px`);
 for (const failure of failures) console.error(`  ✖ ${failure}`);
 if (failures.length) process.exit(1);
 console.log('✅ Untoz Command V2 shell QA passed.');
