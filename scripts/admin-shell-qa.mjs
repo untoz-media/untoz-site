@@ -62,9 +62,6 @@ for (const viewport of viewports) {
       };
     });
 
-    const record = { viewport: viewport.name, status: response?.status() ?? null, ...metrics };
-    results.push(record);
-
     if (!response || response.status() >= 400) failures.push(`${viewport.name}: HTTP ${response?.status() ?? 'no response'}`);
     if (!metrics.commandV2) failures.push(`${viewport.name}: body is missing command-v2 shell class`);
     if (!metrics.authHidden) failures.push(`${viewport.name}: QA session did not unlock the admin shell`);
@@ -80,6 +77,50 @@ for (const viewport of viewports) {
     if (viewport.name === 'admin-mobile' && metrics.mainMarginLeft !== 0) failures.push(`${viewport.name}: mobile main still has ${metrics.mainMarginLeft}px left margin`);
 
     await page.screenshot({ path: `${outDir}/${viewport.name}.png`, fullPage: true });
+
+    await page.locator('[data-view="homepage"]').click();
+    await page.locator('[data-homepage-studio]').waitFor({ state: 'visible', timeout: 8000 });
+    await page.waitForTimeout(250);
+
+    const studio = await page.evaluate(() => ({
+      tabs: document.querySelectorAll('[data-homepage-studio] [data-hs-tab]').length,
+      sections: document.querySelectorAll('[data-homepage-studio] [data-hs-section]').length,
+      activeTab: document.querySelector('[data-homepage-studio] [data-hs-tab].active')?.dataset.hsTab || '',
+      legacyHidden: getComputedStyle(document.querySelector('.hx-panel')).display === 'none',
+      builderHidden: getComputedStyle(document.querySelector('.builder')).display === 'none',
+      overflowX: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+    }));
+    if (studio.tabs !== 3) failures.push(`${viewport.name}: Homepage Studio rendered ${studio.tabs} tabs instead of 3`);
+    if (studio.sections < 6) failures.push(`${viewport.name}: Homepage Studio rendered ${studio.sections} experience sections`);
+    if (studio.activeTab !== 'experience') failures.push(`${viewport.name}: Homepage Studio defaulted to ${studio.activeTab || 'no tab'}`);
+    if (!studio.legacyHidden) failures.push(`${viewport.name}: legacy Homepage Experience panel is still visible`);
+    if (!studio.builderHidden) failures.push(`${viewport.name}: source builder is visible in Experience mode`);
+    if (studio.overflowX > 4) failures.push(`${viewport.name}: Homepage Studio Experience overflow ${studio.overflowX}px`);
+
+    await page.locator('[data-hs-tab="preview"]').click();
+    await page.locator('[data-hs-page-frame]').waitFor({ state: 'visible', timeout: 4000 });
+    const preview = await page.evaluate(() => ({
+      frame: !!document.querySelector('[data-hs-page-frame]'),
+      devices: document.querySelectorAll('[data-hs-device]').length,
+      overflowX: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+    }));
+    if (!preview.frame || preview.devices !== 2) failures.push(`${viewport.name}: Homepage Studio local Preview did not render correctly`);
+    if (preview.overflowX > 4) failures.push(`${viewport.name}: Homepage Studio Preview overflow ${preview.overflowX}px`);
+
+    await page.locator('[data-hs-tab="structure"]').click();
+    await page.waitForTimeout(120);
+    const structure = await page.evaluate(() => ({
+      builderVisible: getComputedStyle(document.querySelector('.builder')).display !== 'none',
+      sourceClass: document.querySelector('.builder')?.classList.contains('hs-source-builder') || false,
+      blocks: document.querySelectorAll('.builder [data-block]').length,
+      overflowX: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+    }));
+    if (!structure.builderVisible || !structure.sourceClass) failures.push(`${viewport.name}: Structure mode did not reveal the production builder`);
+    if (structure.blocks < 1) failures.push(`${viewport.name}: Structure mode has no homepage blocks`);
+    if (structure.overflowX > 4) failures.push(`${viewport.name}: Homepage Studio Structure overflow ${structure.overflowX}px`);
+
+    results.push({ viewport: viewport.name, status: response?.status() ?? null, ...metrics, studio, preview, structure });
+    await page.screenshot({ path: `${outDir}/${viewport.name}-homepage-studio.png`, fullPage: true });
   } catch (error) {
     failures.push(`${viewport.name}: ${String(error?.message || error)}`);
   } finally {
@@ -91,7 +132,7 @@ await browser.close();
 await fs.writeFile(`${outDir}/admin-shell-qa.json`, JSON.stringify({ generatedAt: new Date().toISOString(), baseURL, failures, results }, null, 2));
 
 console.log(`Untoz Command V2 QA: ${results.length} viewport checks`);
-for (const result of results) console.log(`  ✓ ${result.viewport}: ${result.navButtons} nav actions, ${result.navLabels} groups, ${result.sessionActions.length} session action(s), overflow ${result.overflowX}px`);
+for (const result of results) console.log(`  ✓ ${result.viewport}: ${result.navButtons} nav actions, ${result.navLabels} groups, ${result.sessionActions.length} session action(s), studio ${result.studio.tabs} tabs/${result.studio.sections} sections, overflow ${result.overflowX}px`);
 for (const failure of failures) console.error(`  ✖ ${failure}`);
 if (failures.length) process.exit(1);
-console.log('✅ Untoz Command V2 shell QA passed.');
+console.log('✅ Untoz Command V2 shell + Homepage Studio QA passed.');
