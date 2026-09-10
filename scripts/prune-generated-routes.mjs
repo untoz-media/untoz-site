@@ -6,7 +6,8 @@ const contentDir=path.resolve('content');
 if(!fs.existsSync(dist))throw new Error('Missing dist directory. Run the Vite build first.');
 
 const readJson=(name,fallback)=>{try{return JSON.parse(fs.readFileSync(path.join(contentDir,name),'utf8'))}catch{return fallback}};
-const slugify=v=>String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+const decodeHtml=v=>String(v||'').replace(/&amp;/gi,'&').replace(/&quot;/gi,'"').replace(/&#39;|&apos;/gi,"'").replace(/&lt;/gi,'<').replace(/&gt;/gi,'>');
+const slugify=v=>decodeHtml(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 const pages=readJson('pages/index.json',[]);
 const posts=readJson('posts.json',[]);
 const brandsData=readJson('brands.json',{brands:[]});
@@ -17,7 +18,7 @@ const validBrands=new Set((Array.isArray(brandsData?.brands)?brandsData.brands:[
 const validCategories=new Set((Array.isArray(categories)?categories:[]).map(slugify).filter(Boolean));
 const validArticles=new Set((Array.isArray(posts)?posts:[]).filter(p=>['Published','Scheduled'].includes(p?.status)&&slugify(p?.slug)).map(p=>`${slugify(p?.category||'news')||'news'}/${slugify(p.slug)}`));
 
-const attr=(html,name)=>html.match(new RegExp(`${name}=["']([^"']+)["']`,'i'))?.[1]||'';
+const attr=(html,name)=>decodeHtml(html.match(new RegExp(`${name}=["']([^"']+)["']`,'i'))?.[1]||'');
 const indexFiles=[];
 function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const full=path.join(dir,entry.name);if(entry.isDirectory())walk(full);else if(entry.isFile()&&entry.name==='index.html'&&full!==path.join(dist,'index.html'))indexFiles.push(full)}}
 walk(dist);

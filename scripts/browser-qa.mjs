@@ -3,6 +3,7 @@ import { chromium } from 'playwright';
 
 const baseURL = process.env.UNTOZ_QA_BASE_URL || 'http://127.0.0.1:4173/';
 const outDir = process.env.UNTOZ_QA_OUT || 'qa-artifacts';
+const publicSiteBase = String(process.env.PUBLIC_SITE_BASE || 'https://untoz-media.github.io/untoz-site').replace(/\/+$/, '');
 const slugify = value => String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
 await fs.mkdir(outDir, { recursive: true });
@@ -10,6 +11,7 @@ await fs.mkdir(outDir, { recursive: true });
 const browser = await chromium.launch({ headless: true });
 const results = [];
 const interactions = [];
+const seoFiles = [];
 const fatal = [];
 const warnings = [];
 
@@ -62,6 +64,8 @@ function shouldScreenshot(routeId, viewportName) {
 async function revealBeforeScreenshot(page) {
   await page.evaluate(async () => {
     const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const previous = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
     const step = Math.max(360, Math.floor(innerHeight * 0.72));
     const max = Math.max(0, document.documentElement.scrollHeight - innerHeight);
     for (let y = 0; y <= max; y += step) {
@@ -72,6 +76,7 @@ async function revealBeforeScreenshot(page) {
     await wait(140);
     scrollTo(0, 0);
     await wait(140);
+    document.documentElement.style.scrollBehavior = previous;
   });
 }
 
@@ -110,10 +115,6 @@ async function inspectPage(page, route, viewport, theme = 'light') {
     }).map(img => img.currentSrc || img.src);
     const externalBrokenImages = [...document.images].filter(img => img.complete && img.naturalWidth === 0).map(img => img.currentSrc || img.src).filter(Boolean);
     const fontFamily = getComputedStyle(body).fontFamily;
-    const mainCount = document.querySelectorAll('main').length;
-    const headingCount = document.querySelectorAll('h1').length;
-    const headerCount = document.querySelectorAll('header').length;
-    const footerCount = document.querySelectorAll('footer').length;
     return {
       title: document.title,
       overflowX: Math.max(root.scrollWidth, body.scrollWidth) - innerWidth,
@@ -121,11 +122,14 @@ async function inspectPage(page, route, viewport, theme = 'light') {
       sameOriginBrokenImages,
       externalBrokenImages,
       fontFamily,
-      mainCount,
-      headingCount,
-      headerCount,
-      footerCount,
+      mainCount: document.querySelectorAll('main').length,
+      headingCount: document.querySelectorAll('h1').length,
+      headerCount: document.querySelectorAll('header').length,
+      footerCount: document.querySelectorAll('footer').length,
       bodyTheme: root.dataset.theme || (body.classList.contains('theme-dark') ? 'dark' : 'light'),
+      canonical: document.querySelector('link[rel="canonical"]')?.href || '',
+      ogUrl: document.querySelector('meta[property="og:url"]')?.content || '',
+      rss: document.querySelector('link[rel="alternate"][type="application/rss+xml"]')?.href || '',
     };
   });
 
@@ -151,6 +155,13 @@ async function inspectPage(page, route, viewport, theme = 'light') {
   if (!metrics.fontFamily.toLowerCase().includes('montserrat') && !['404'].includes(route.id)) warnings.push(`${viewport.name}/${route.id}: body font is ${metrics.fontFamily}`);
   if (metrics.externalBrokenImages.length) warnings.push(`${viewport.name}/${route.id}: ${metrics.externalBrokenImages.length} broken image(s), including external resources`);
   if (consoleErrors.length) warnings.push(`${viewport.name}/${route.id}: console error(s): ${consoleErrors.slice(0, 3).join(' | ')}`);
+  if (route.id !== '404') {
+    if (!metrics.canonical) fatal.push(`${viewport.name}/${route.id}: missing canonical URL`);
+    else if (!metrics.canonical.startsWith(publicSiteBase)) fatal.push(`${viewport.name}/${route.id}: canonical uses unexpected origin ${metrics.canonical}`);
+    if (!metrics.ogUrl) warnings.push(`${viewport.name}/${route.id}: missing og:url`);
+    else if (!metrics.ogUrl.startsWith(publicSiteBase)) warnings.push(`${viewport.name}/${route.id}: og:url uses unexpected origin ${metrics.ogUrl}`);
+  }
+  if (route.id === 'home' && !metrics.rss) warnings.push(`${viewport.name}/home: missing RSS discovery link`);
 
   if (theme === 'light' && shouldScreenshot(route.id, viewport.name)) {
     await revealBeforeScreenshot(page);
@@ -254,30 +265,46 @@ await interactionCheck('contact-mail-link', { width: 1440, height: 900 }, 'conta
   return `${count} mail action(s)`;
 });
 
+for (const name of ['robots.txt', 'sitemap.xml', 'feed.xml']) {
+  try {
+    const response = await fetch(new URL(name, baseURL));
+    const text = await response.text();
+    seoFiles.push({ name, status: response.status, containsPublicOrigin: text.includes(publicSiteBase) });
+    if (!response.ok) fatal.push(`seo/${name}: HTTP ${response.status}`);
+    if (!text.includes(publicSiteBase)) fatal.push(`seo/${name}: does not use PUBLIC_SITE_BASE ${publicSiteBase}`);
+  } catch (error) {
+    fatal.push(`seo/${name}: ${String(error?.message || error)}`);
+  }
+}
+
 await browser.close();
 
 const report = {
   generatedAt: new Date().toISOString(),
   baseURL,
+  publicSiteBase,
   routes: routes.map(r => r.path || '/'),
   viewports,
   checks: results.length,
   interactionChecks: interactions.length,
+  seoFileChecks: seoFiles.length,
   fatal: [...new Set(fatal)],
   warnings: [...new Set(warnings)],
   interactions,
+  seoFiles,
   results,
 };
 
 await fs.writeFile(`${outDir}/qa-results.json`, JSON.stringify(report, null, 2));
 
-console.log(`\nUntoz Browser QA: ${results.length} page checks + ${interactions.length} interaction checks`);
+console.log(`\nUntoz Browser QA: ${results.length} page checks + ${interactions.length} interaction checks + ${seoFiles.length} SEO file checks`);
 console.log(`Fatal issues: ${report.fatal.length}`);
 for (const issue of report.fatal) console.error(`  ✖ ${issue}`);
 console.log(`Warnings: ${report.warnings.length}`);
 for (const warning of report.warnings.slice(0, 40)) console.warn(`  ⚠ ${warning}`);
 for (const interaction of interactions) console.log(`  ${interaction.passed ? '✓' : '✖'} ${interaction.name}: ${interaction.detail}`);
+for (const file of seoFiles) console.log(`  ${file.status === 200 && file.containsPublicOrigin ? '✓' : '✖'} ${file.name}: HTTP ${file.status}, origin ${file.containsPublicOrigin ? 'ok' : 'mismatch'}`);
 if (report.warnings.length > 40) console.warn(`  … ${report.warnings.length - 40} more warning(s) in qa-results.json`);
 
 if (report.fatal.length) process.exit(1);
-console.log('✅ Untoz V2 browser QA passed.');
+console.log('✅ Untoz production browser QA passed.');

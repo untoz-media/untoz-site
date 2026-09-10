@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const SITE_BASE = 'https://untoz-media.github.io/untoz-site';
+const SITE_BASE = String(process.env.PUBLIC_SITE_BASE || 'https://untoz-media.github.io/untoz-site').replace(/\/+$/, '');
 const postsPath = path.resolve('content/posts.json');
 const pagesPath = path.resolve('content/pages/index.json');
 const brandsPath = path.resolve('content/brands.json');
@@ -28,7 +28,8 @@ function articleRouteHtml(post) {
   const title = htmlEscape(post.seo_title || post.title || 'Untoz');
   const desc = htmlEscape(post.seo || post.excerpt || 'Untoz story.');
   const image = htmlEscape(post.image || '');
-  return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <meta name="robots" content="index,follow">\n  <meta name="description" content="${desc}">\n  <meta property="og:type" content="article">\n  <meta property="og:site_name" content="Untoz">\n  <meta property="og:title" content="${title}">\n  <meta property="og:description" content="${desc}">\n  ${image ? `<meta property="og:image" content="${image}">\n  <meta name="twitter:image" content="${image}">\n  ` : ''}<meta name="twitter:card" content="summary_large_image">\n  <meta name="twitter:title" content="${title}">\n  <meta name="twitter:description" content="${desc}">\n  <title>${title} — Untoz</title>\n  <link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css">\n  <link rel="stylesheet" href="../../article-renderer.css">\n</head>\n<body data-article-category="${htmlEscape(category)}" data-article-slug="${htmlEscape(slug)}">\n  <div id="article-root"></div>\n  <script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script>\n  <script src="../../article-renderer.js"></script>\n</body>\n</html>\n`;
+  const url = `${SITE_BASE}/${category}/${slug}/`;
+  return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <meta name="robots" content="index,follow">\n  <meta name="description" content="${desc}">\n  <link rel="canonical" href="${htmlEscape(url)}">\n  <meta property="og:type" content="article">\n  <meta property="og:site_name" content="Untoz">\n  <meta property="og:url" content="${htmlEscape(url)}">\n  <meta property="og:title" content="${title}">\n  <meta property="og:description" content="${desc}">\n  ${image ? `<meta property="og:image" content="${image}">\n  <meta name="twitter:image" content="${image}">\n  ` : ''}<meta name="twitter:card" content="summary_large_image">\n  <meta name="twitter:title" content="${title}">\n  <meta name="twitter:description" content="${desc}">\n  <title>${title} — Untoz</title>\n  <link rel="stylesheet" href="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.css">\n  <link rel="stylesheet" href="../../article-renderer.css">\n</head>\n<body data-article-category="${htmlEscape(category)}" data-article-slug="${htmlEscape(slug)}">\n  <div id="article-root"></div>\n  <script src="https://untoz-media.github.io/untoz-global-header/src/untoz-global-header.js"></script>\n  <script src="../../article-renderer.js"></script>\n</body>\n</html>\n`;
 }
 
 function writeArticleRoute(post) {

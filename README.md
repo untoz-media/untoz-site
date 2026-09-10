@@ -14,7 +14,7 @@ The main Untoz portal brings together the company, its media brands, productions
 
 ## Untoz V2
 
-The portal is currently evolving into **Untoz V2**, a site-wide design system rather than a homepage-only refresh. The work is being developed on `feature/homepage-v2` and reviewed through the V2 pull request before it reaches `main`.
+**Untoz V2 is live on GitHub Pages.** It is a site-wide design system rather than a homepage-only refresh and now powers the public portal across homepage, editorial, search, network and institutional experiences.
 
 The V2 direction is built around:
 
@@ -26,8 +26,6 @@ The V2 direction is built around:
 - brand-led subsidiary pages that use each brand accent without losing the Untoz system
 - responsive layouts, keyboard focus states and `prefers-reduced-motion` support
 - content-driven experiences that remain compatible with Untoz Command and the existing CMS runtime
-
-V2 currently covers the homepage, category pages, editorial articles, search, subsidiary/network pages, the 404 experience and institutional/static pages such as About and Contact.
 
 ## Portal architecture
 
@@ -49,6 +47,8 @@ Key V2 files include:
 - `page-v2-states.css` — loading, empty and error-state polish
 - `404.html` — custom V2 error experience
 - `public/admin/homepage-experience-manager.js` — V2 homepage experience editor and publish safeguard
+- `scripts/browser-qa.mjs` — production browser, interaction and SEO QA
+- `scripts/finalize-seo.mjs` — canonical/OG/RSS/SEO origin finalizer for `dist`
 
 The `public/` runtime mirrors critical public-facing renderer files where required so local/build behaviour stays aligned.
 
@@ -56,13 +56,13 @@ The `public/` runtime mirrors critical public-facing renderer files where requir
 
 About, Contact and future CMS-backed public pages use the shared page renderer rather than bespoke hard-coded layouts.
 
-Phase 6 adds:
+The institutional system includes:
 
 - brand-first CSS art direction without stock imagery
 - reusable hero, heading, text, quote, columns, button, image and video blocks
 - a shared premium footer and navigation system
 - designed loading, empty, unavailable and error states
-- direct loading of branch/build-local page JSON before falling back to the published `main` copy
+- direct loading of build-local page JSON before falling back to the published `main` copy
 - static SEO metadata for About and Contact so those routes do not depend on JavaScript to become indexable
 
 The detailed page JSON lives in `content/pages/<slug>.json`; searchable page summaries live in `content/pages/index.json`.
@@ -114,7 +114,31 @@ Create the production build:
 npm run build
 ```
 
-The production build validates content first, builds with Vite, copies content, prunes stale generated routes and injects analytics.
+The production build validates content, builds with Vite, copies content, prunes stale generated routes, injects analytics and finalizes canonical/OG/RSS metadata for the configured production origin.
+
+### Production origin
+
+`PUBLIC_SITE_BASE` controls the absolute public origin used in canonical URLs, `og:url`, sitemap, RSS and robots metadata.
+
+Current GitHub Pages production value:
+
+```text
+https://untoz-media.github.io/untoz-site
+```
+
+The deploy, scheduled publishing and content CI workflows declare this value explicitly. This keeps the current GitHub Pages deployment internally consistent while making a future custom-domain cutover a configuration change rather than a code rewrite.
+
+### `untoz.site` cutover
+
+`untoz.site` currently serves the previous portal, so it must **not** become the V2 canonical until DNS/hosting is switched.
+
+When the V2 is ready to take over `untoz.site`:
+
+1. point the domain DNS/custom-domain configuration to GitHub Pages;
+2. set `PUBLIC_SITE_BASE=https://untoz.site` in the relevant workflows/environment;
+3. ensure the Pages custom-domain configuration preserves that hostname in the published artifact;
+4. deploy and verify `robots.txt`, `sitemap.xml`, `feed.xml`, canonical and `og:url` on the live domain;
+5. only then retire or redirect the previous portal.
 
 ## Quality gates
 
@@ -123,9 +147,12 @@ Changes should keep the following green before merging:
 - Untoz Content CI
 - CMS/content validation
 - production Vite build
+- production-dist Chromium QA
+- canonical/OG/sitemap/RSS/robots checks
+- homepage carousel, mobile navigation, search filtering, theme toggle and contact interaction checks
 - Untoz Bot workflow
 
-V2 is intentionally kept isolated from `main` until visual/browser QA is complete.
+Browser QA runs against the built `dist`, not the Vite development runtime, so the tested output matches what GitHub Pages receives.
 
 ## Network
 
