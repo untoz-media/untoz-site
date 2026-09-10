@@ -27,7 +27,7 @@ The V2 direction is built around:
 - responsive layouts, keyboard focus states and `prefers-reduced-motion` support
 - content-driven experiences that remain compatible with Untoz Command and the existing CMS runtime
 
-V2 currently covers the homepage, category pages, editorial articles, search, subsidiary/network pages and the 404 experience.
+V2 currently covers the homepage, category pages, editorial articles, search, subsidiary/network pages, the 404 experience and institutional/static pages such as About and Contact.
 
 ## Portal architecture
 
@@ -44,9 +44,28 @@ Key V2 files include:
 - `article-renderer.css` — article V2 styling
 - `search-renderer.css` — Untoz Search V2 styling
 - `subsidiary-renderer.js` / `subsidiary-renderer.css` — shared Untoz network brand runtime
+- `page-renderer.js` — reusable CMS-backed institutional/static page runtime
+- `page-v2.css` — V2 institutional page visual layer
+- `page-v2-states.css` — loading, empty and error-state polish
+- `404.html` — custom V2 error experience
 - `public/admin/homepage-experience-manager.js` — V2 homepage experience editor and publish safeguard
 
 The `public/` runtime mirrors critical public-facing renderer files where required so local/build behaviour stays aligned.
+
+## Institutional pages
+
+About, Contact and future CMS-backed public pages use the shared page renderer rather than bespoke hard-coded layouts.
+
+Phase 6 adds:
+
+- brand-first CSS art direction without stock imagery
+- reusable hero, heading, text, quote, columns, button, image and video blocks
+- a shared premium footer and navigation system
+- designed loading, empty, unavailable and error states
+- direct loading of branch/build-local page JSON before falling back to the published `main` copy
+- static SEO metadata for About and Contact so those routes do not depend on JavaScript to become indexable
+
+The detailed page JSON lives in `content/pages/<slug>.json`; searchable page summaries live in `content/pages/index.json`.
 
 ## Content
 
@@ -59,12 +78,15 @@ Important data files include:
 - `content/brands.json`
 - `content/categories.json`
 - `content/pages/index.json`
+- `content/pages/<slug>.json`
 
 `content/homepage.json` keeps the classic homepage `blocks` payload while V2 adds an `experience` object for the manifesto, brand rail, featured productions, products, stats and final CTA. This keeps the new experience editable without replacing the existing publishing model.
 
 ## Untoz Command
 
 Untoz Command is the internal publishing/admin layer used to manage portal content. The V2 Homepage Experience editor extends the existing Homepage Builder and preserves the V2 `experience` configuration when the classic homepage payload is published.
+
+Institutional pages remain CMS-backed through the existing page block model, so About, Contact and future static routes can evolve without creating bespoke front-end implementations for every page.
 
 ## Development
 
