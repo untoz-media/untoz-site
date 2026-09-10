@@ -1,7 +1,92 @@
 {
-  "title": "Contact",
+  "title": "Contact Untoz",
   "slug": "contact",
   "status": "Published",
-  "seo": "Contact Untoz.",
-  "content": "Contact Untoz\n\nFor general enquiries, partnerships and media opportunities, contact the Untoz team."
+  "seo": "Contact Untoz for general enquiries, partnerships, press, licensing and media opportunities.",
+  "content": "Contact Untoz for general enquiries, partnerships, press, licensing and media opportunities.",
+  "styles": {
+    "backgroundMode": "solid",
+    "background": "#f4f5f7",
+    "textColor": "#111318",
+    "accentColor": "#1f6ffa",
+    "surfaceColor": "#ffffff",
+    "maxWidth": "1320",
+    "font": "inherit",
+    "paddingTop": 42,
+    "paddingBottom": 92,
+    "gap": 20,
+    "radius": 28,
+    "showHeader": true,
+    "showFooter": true
+  },
+  "blocks": [
+    {
+      "type": "Hero",
+      "props": {
+        "eyebrow": "UNTOZ / CONTACT",
+        "title": "Let’s make something worth talking about.",
+        "text": "Partnerships, press, business, licensing or just a question — reach out and we’ll get the conversation to the right place.",
+        "buttonText": "Email Untoz →",
+        "buttonUrl": "mailto:untozcontact@gmail.com"
+      },
+      "style": {"background": "transparent", "padding": 24, "radius": 28, "align": "left"}
+    },
+    {
+      "type": "Heading",
+      "props": {"level": "h2", "text": "Choose the conversation."},
+      "style": {"background": "transparent", "padding": 24, "radius": 0, "align": "left"}
+    },
+    {
+      "type": "Text",
+      "props": {
+        "text": "Tell us what you’re contacting Untoz about and include the project, brand or deadline when it matters. That makes it much easier to route your message quickly."
+      },
+      "style": {"background": "transparent", "padding": 24, "radius": 0, "align": "left"}
+    },
+    {
+      "type": "Columns",
+      "props": {
+        "leftTitle": "General enquiries",
+        "leftText": "Questions about Untoz, our brands, products or public projects.\n\nuntozcontact@gmail.com",
+        "rightTitle": "Partnerships & collaborations",
+        "rightText": "Brand partnerships, creative collaborations, commercial opportunities and projects involving the wider Untoz network."
+      },
+      "style": {"background": "transparent", "padding": 0, "radius": 28, "align": "left"}
+    },
+    {
+      "type": "Columns",
+      "props": {
+        "leftTitle": "Press & media",
+        "leftText": "Interview requests, press information, coverage enquiries and requests concerning Untoz announcements, productions or products.",
+        "rightTitle": "Rights & licensing",
+        "rightText": "Questions about content use, distribution, trailers, footage, licensing, permissions or other rights-related matters."
+      },
+      "style": {"background": "transparent", "padding": 0, "radius": 28, "align": "left"}
+    },
+    {
+      "type": "Quote",
+      "props": {
+        "text": "One network. The right conversation.",
+        "author": "Untoz"
+      },
+      "style": {"background": "#0c0f15", "color": "#ffffff", "padding": 48, "radius": 28, "align": "left"}
+    },
+    {
+      "type": "Heading",
+      "props": {"level": "h2", "text": "Before you send."},
+      "style": {"background": "transparent", "padding": 24, "radius": 0, "align": "left"}
+    },
+    {
+      "type": "Text",
+      "props": {
+        "text": "For faster handling, include a clear subject, the Untoz brand or project involved, any relevant links or files, and a deadline if your request is time-sensitive."
+      },
+      "style": {"background": "transparent", "padding": 24, "radius": 0, "align": "left"}
+    },
+    {
+      "type": "Button",
+      "props": {"text": "Contact Untoz →", "url": "mailto:untozcontact@gmail.com", "variant": "solid"},
+      "style": {"background": "transparent", "padding": 24, "radius": 0, "align": "left"}
+    }
+  ]
 }

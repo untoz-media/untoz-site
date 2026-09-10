@@ -2,6 +2,91 @@
   "title": "About Untoz",
   "slug": "about",
   "status": "Published",
-  "seo": "Learn more about Untoz, our media, entertainment and technology projects.",
-  "content": "About Untoz\n\nUntoz is a media, entertainment and technology company building digital experiences, original content and connected brands."
+  "seo": "Meet Untoz — a media, entertainment and technology company building stories, products, live experiences and connected brands.",
+  "content": "Untoz is a media, entertainment and technology company building stories, products and experiences across one connected universe.",
+  "styles": {
+    "backgroundMode": "solid",
+    "background": "#f4f5f7",
+    "textColor": "#111318",
+    "accentColor": "#1f6ffa",
+    "surfaceColor": "#ffffff",
+    "maxWidth": "1320",
+    "font": "inherit",
+    "paddingTop": 42,
+    "paddingBottom": 92,
+    "gap": 20,
+    "radius": 28,
+    "showHeader": true,
+    "showFooter": true
+  },
+  "blocks": [
+    {
+      "type": "Hero",
+      "props": {
+        "eyebrow": "UNTOZ / ABOUT",
+        "title": "Media should feel alive.",
+        "text": "Untoz is a media, entertainment and technology company creating stories, products and experiences across one connected universe.",
+        "buttonText": "Explore the Untoz universe →",
+        "buttonUrl": "../#universe"
+      },
+      "style": {"background": "transparent", "padding": 24, "radius": 28, "align": "left"}
+    },
+    {
+      "type": "Heading",
+      "props": {"level": "h2", "text": "One company. Many worlds."},
+      "style": {"background": "transparent", "padding": 24, "radius": 0, "align": "left"}
+    },
+    {
+      "type": "Text",
+      "props": {
+        "text": "Untoz connects journalism, sport, entertainment, gaming, technology, original productions and live experiences. Each brand has its own voice. Together, they form one network designed to make discovery feel effortless."
+      },
+      "style": {"background": "transparent", "padding": 24, "radius": 0, "align": "left"}
+    },
+    {
+      "type": "Columns",
+      "props": {
+        "leftTitle": "Media",
+        "leftText": "Untoz News and our editorial brands cover the stories, culture and moments people are talking about — with digital-first storytelling at the centre.",
+        "rightTitle": "Entertainment",
+        "rightText": "Original productions, music, films, series, events and formats built to entertain audiences across the Untoz network and Untoz+."
+      },
+      "style": {"background": "transparent", "padding": 0, "radius": 28, "align": "left"}
+    },
+    {
+      "type": "Columns",
+      "props": {
+        "leftTitle": "Technology",
+        "leftText": "Products such as AURA-1 and Untoz Clip explore how software and AI can make creative work faster, more useful and more personal.",
+        "rightTitle": "Live & culture",
+        "rightText": "From sport and breaking coverage to WorldUnited and the Untoz Awards, live moments are part of how the Untoz universe comes together."
+      },
+      "style": {"background": "transparent", "padding": 0, "radius": 28, "align": "left"}
+    },
+    {
+      "type": "Quote",
+      "props": {
+        "text": "Everything we do. For everyone.",
+        "author": "Untoz"
+      },
+      "style": {"background": "#0c0f15", "color": "#ffffff", "padding": 48, "radius": 28, "align": "left"}
+    },
+    {
+      "type": "Heading",
+      "props": {"level": "h2", "text": "Built as a network, not a collection."},
+      "style": {"background": "transparent", "padding": 24, "radius": 0, "align": "left"}
+    },
+    {
+      "type": "Text",
+      "props": {
+        "text": "The goal is simple: make every Untoz experience feel connected without making every brand feel the same. Shared technology, shared standards and a recognisable design language give each project room to have its own identity."
+      },
+      "style": {"background": "transparent", "padding": 24, "radius": 0, "align": "left"}
+    },
+    {
+      "type": "Button",
+      "props": {"text": "See what Untoz is building →", "url": "../#products", "variant": "solid"},
+      "style": {"background": "transparent", "padding": 24, "radius": 0, "align": "left"}
+    }
+  ]
 }

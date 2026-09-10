@@ -1,4 +1,4 @@
-# Untoz Site
+# Untoz
 
 > The official web portal for Untoz — media, entertainment and technology.
 
@@ -8,160 +8,139 @@
 
 ## About
 
-**Untoz Site** is the main digital portal for the Untoz universe. It brings together news, entertainment, sports, gaming, music, movies & series, space, video, live coverage, productions and other Untoz projects in one place.
+Untoz is a media, technology and entertainment company building one connected universe of stories, products and experiences.
 
-The website is designed as a modern editorial and media portal while keeping the visual identity of Untoz across the entire experience.
+The main Untoz portal brings together the company, its media brands, productions, products and services — including Untoz News, Untoz Sports, Untoz Pop, Untoz Gaming, Untoz Space, Untoz Kids, Untoz Archives, Untoz+, AURA-1 and Untoz Clip.
 
-## Features
+## Untoz V2
 
-- Untoz Global Header integration
-- Dedicated boxed Untoz site navigation
-- Light and dark modes
-- Functional site search
-- Featured hero carousel
-- Live and upcoming content
-- Top Stories
-- Untoz+ featured content
-- Untoz categories and universe navigation
-- Upcoming events
-- Latest videos
-- Responsive desktop and mobile layouts
-- JSON-based content system
-- **Untoz Command** administration panel
+The portal is currently evolving into **Untoz V2**, a site-wide design system rather than a homepage-only refresh. The work is being developed on `feature/homepage-v2` and reviewed through the V2 pull request before it reaches `main`.
+
+The V2 direction is built around:
+
+- **Montserrat** as the primary Untoz interface typeface
+- Untoz green `#0cdb46`, blue `#1f6ffa` and orange `#ff7c04`
+- large editorial typography and stronger visual hierarchy
+- rounded, premium surfaces with restrained motion
+- a consistent dark navigation language across public routes
+- brand-led subsidiary pages that use each brand accent without losing the Untoz system
+- responsive layouts, keyboard focus states and `prefers-reduced-motion` support
+- content-driven experiences that remain compatible with Untoz Command and the existing CMS runtime
+
+V2 currently covers the homepage, category pages, editorial articles, search, subsidiary/network pages, the 404 experience and institutional/static pages such as About and Contact.
+
+## Portal architecture
+
+The project intentionally keeps presentation layers separated from content and CMS logic so design work can move quickly without destabilising publishing.
+
+Key V2 files include:
+
+- `home-v2.js` — homepage structural enhancement layer
+- `src/home-v2.css` — homepage V2 foundation
+- `home-v2-phase2.js` — content-driven brand and experience runtime
+- `src/home-v2-phase2.css` — homepage brand art direction and motion
+- `src/home-v2-polish.css` — visual QA and finishing layer
+- `category-renderer.css` — category V2 styling
+- `article-renderer.css` — article V2 styling
+- `search-renderer.css` — Untoz Search V2 styling
+- `subsidiary-renderer.js` / `subsidiary-renderer.css` — shared Untoz network brand runtime
+- `page-renderer.js` — reusable CMS-backed institutional/static page runtime
+- `page-v2.css` — V2 institutional page visual layer
+- `page-v2-states.css` — loading, empty and error-state polish
+- `404.html` — custom V2 error experience
+- `public/admin/homepage-experience-manager.js` — V2 homepage experience editor and publish safeguard
+
+The `public/` runtime mirrors critical public-facing renderer files where required so local/build behaviour stays aligned.
+
+## Institutional pages
+
+About, Contact and future CMS-backed public pages use the shared page renderer rather than bespoke hard-coded layouts.
+
+Phase 6 adds:
+
+- brand-first CSS art direction without stock imagery
+- reusable hero, heading, text, quote, columns, button, image and video blocks
+- a shared premium footer and navigation system
+- designed loading, empty, unavailable and error states
+- direct loading of branch/build-local page JSON before falling back to the published `main` copy
+- static SEO metadata for About and Contact so those routes do not depend on JavaScript to become indexable
+
+The detailed page JSON lives in `content/pages/<slug>.json`; searchable page summaries live in `content/pages/index.json`.
+
+## Content
+
+Editorial and homepage content lives under `content/` and is validated before production builds.
+
+Important data files include:
+
+- `content/homepage.json`
+- `content/posts.json`
+- `content/brands.json`
+- `content/categories.json`
+- `content/pages/index.json`
+- `content/pages/<slug>.json`
+
+`content/homepage.json` keeps the classic homepage `blocks` payload while V2 adds an `experience` object for the manifesto, brand rail, featured productions, products, stats and final CTA. This keeps the new experience editable without replacing the existing publishing model.
 
 ## Untoz Command
 
-The repository includes **Untoz Command**, the administration and content-management interface used to manage the portal.
+Untoz Command is the internal publishing/admin layer used to manage portal content. The V2 Homepage Experience editor extends the existing Homepage Builder and preserves the V2 `experience` configuration when the classic homepage payload is published.
 
-The admin panel currently includes:
-
-- Dashboard
-- Pages
-- Posts
-- Media
-- Categories
-- Genres
-- Menus
-- Homepage Builder
-- Design System settings
-- Header and footer settings
-- Site settings
-- Live CMS synchronization
-- Preview and publishing workflow
-
-Admin route:
-
-```text
-/admin/
-```
-
-> The admin interface is marked `noindex,nofollow` and is intended for Untoz administration.
-
-## Content system
-
-Site content is stored as structured JSON under `content/`.
-
-```text
-content/
-├── categories.json
-├── genres.json
-├── homepage.json
-├── posts.json
-├── site.json
-├── pages/
-│   ├── about.json
-│   └── contact.json
-└── posts/
-```
-
-This structure allows Untoz Command and the public website to share the same content source while keeping the project lightweight and compatible with static hosting.
-
-## Project structure
-
-```text
-untoz-site/
-├── .github/workflows/       # GitHub Pages deployment
-├── admin/                   # Branch-safe admin entrypoint
-├── content/                 # CMS content
-├── public/
-│   └── admin/               # Untoz Command application
-├── src/                     # Site source and styles
-├── index.html               # Public site entrypoint
-├── static-home.js           # Deploy-safe homepage runtime
-├── vite.config.js
-└── package.json
-```
+Institutional pages remain CMS-backed through the existing page block model, so About, Contact and future static routes can evolve without creating bespoke front-end implementations for every page.
 
 ## Development
 
-### Requirements
-
-- Node.js 20+
-- npm
-
-### Install
+Install dependencies:
 
 ```bash
-git clone https://github.com/untoz-media/untoz-site.git
-cd untoz-site
 npm install
 ```
 
-### Start the development server
+Start the local Vite development server:
 
 ```bash
 npm run dev
 ```
 
-### Production build
+Validate CMS/content data:
+
+```bash
+npm run validate:content
+```
+
+Create the production build:
 
 ```bash
 npm run build
 ```
 
-The production output is generated in `dist/`.
+The production build validates content first, builds with Vite, copies content, prunes stale generated routes and injects analytics.
 
-## Deployment
+## Quality gates
 
-The website is deployed using **GitHub Pages** and GitHub Actions.
+Changes should keep the following green before merging:
 
-Production preview:
+- Untoz Content CI
+- CMS/content validation
+- production Vite build
+- Untoz Bot workflow
 
-https://untoz-media.github.io/untoz-site/
+V2 is intentionally kept isolated from `main` until visual/browser QA is complete.
 
-The project uses deploy-safe relative paths so it can work from the GitHub Pages repository path and can later be used with the main Untoz domain.
+## Network
 
-## Design
+Untoz currently exposes shared public experiences for brands including:
 
-Current Untoz brand colors:
+- Untoz News
+- Untoz Sports
+- Untoz Pop
+- Untoz Gaming
+- Untoz Space
+- Untoz Kids
+- Untoz Archives
 
-| Role | Color |
-| --- | --- |
-| Green | `#0cdb46` |
-| Blue | `#1f6ffa` |
-| Orange | `#ff7c04` |
+Each subsidiary reads its identity and navigation from `content/brands.json`, allowing a common runtime to retain distinct brand accents and editorial positioning.
 
-The portal uses a clean, editorial interface built around the Untoz identity, with a separate reusable **Untoz Global Header** above the site's own navigation.
-
-## Related Untoz projects
-
-- **Untoz+** — streaming platform
-- **Untoz News** — news and current affairs
-- **Untoz Sports** — sports coverage
-- **Untoz Gaming** — gaming
-- **Untoz Space** — space coverage
-- **Untoz Kids** — children's content
-- **Untoz Archives** — archive content
-- **Untoz Command** — administration and CMS
-
-## Status
-
-🚧 **Active development**
-
-The new Untoz portal and Untoz Command are being actively developed. Features, content structures and design elements may change as the platform evolves.
-
-## Copyright
+## License and ownership
 
 © 2026 Untoz. All rights reserved.
-
-This repository contains the official Untoz website source code. Unless explicitly stated otherwise, Untoz branding, original assets and original content remain the property of Untoz.
