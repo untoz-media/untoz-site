@@ -58,6 +58,19 @@
     title.dataset.commandKicker=KICKERS[id]||'Untoz Command';
   }
 
+  function integrateSessionControls(){
+    const actions=document.querySelector('.topbar .top-actions');
+    if(!actions)return;
+    const sync=document.getElementById('command-sync');
+    const signOut=[...document.querySelectorAll('button,a')].find(node=>node.textContent?.trim()==='Sign out');
+    [sync,signOut].filter(Boolean).forEach(control=>{
+      if(control.parentElement!==actions)actions.insertBefore(control,actions.firstChild);
+      control.classList.add('command-v2-session-action');
+      if(control===sync)control.dataset.commandSession='sync';
+      else control.dataset.commandSession='signout';
+    });
+  }
+
   function enhanceDashboard(){
     const overview=document.querySelector('[data-command-overview]');
     if(!overview||overview.dataset.commandV2==='ready')return;
@@ -85,6 +98,7 @@
     enhanceBrand();
     enhanceSidebarStatus();
     enhanceTopbar();
+    integrateSessionControls();
     enhanceDashboard();
     enhanceTables();
   }
