@@ -3,7 +3,7 @@
   const key=String(document.body.dataset.subsidiary||'news').toLowerCase();
   const base=new URL('../',location.href),home=new URL('./',base).href;
   const slugify=v=>String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]));
+  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const defaults=[
     {id:'news',name:'Untoz News',short:'News',accent:'#ff453a',tagline:'The world, as it happens.',description:'Breaking stories, explainers and updates from across the world.',categories:['News'],hero:'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1800&q=88',navigation:['Latest','World','Technology','Live'],enabled:true},
     {id:'sports',name:'Untoz Sports',short:'Sports',accent:'#0cdb46',tagline:'Every game. Every moment.',description:'Scores, stories, live coverage and the biggest moments in sport.',categories:['Sports'],hero:'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1800&q=88',navigation:['Football','Live','Results','Features'],enabled:true},
