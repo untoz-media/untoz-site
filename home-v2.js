@@ -43,9 +43,9 @@
     productions.innerHTML=`
       <div class="v2-section-head"><div><small>FEATURED PRODUCTIONS</small><h2>Made by Untoz.</h2></div><a href="#footer">See productions ↗</a></div>
       <div class="v2-production-grid">
-        <a class="v2-production-card v2-production-wide" href="https://worldunited.untoz.site/"><img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1400&q=88" alt=""><div><small>LIVE EVENT · AMSTERDAM</small><h3>WorldUnited 2026</h3><p>A WORLD OF SOUND</p></div><b>↗</b></a>
-        <a class="v2-production-card" href="https://awards.untoz.site/"><img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=88" alt=""><div><small>AWARDS · SYDNEY</small><h3>Untoz Awards 2027</h3><p>CATCH THE LIGHT</p></div><b>↗</b></a>
-        <a class="v2-production-card" href="./kids/"><img src="https://images.unsplash.com/photo-1560785496-3c9d27877182?auto=format&fit=crop&w=900&q=88" alt=""><div><small>UNTOZ KIDS</small><h3>Lila & Bobo</h3><p>Small adventures. Big imagination.</p></div><b>↗</b></a>
+        <a class="v2-production-card v2-production-wide" href="https://worldunited.untoz.site/"><div><small>LIVE EVENT · AMSTERDAM</small><h3>WorldUnited 2026</h3><p>A WORLD OF SOUND</p></div><b>↗</b></a>
+        <a class="v2-production-card" href="https://awards.untoz.site/"><div><small>AWARDS · SYDNEY</small><h3>Untoz Awards 2027</h3><p>CATCH THE LIGHT</p></div><b>↗</b></a>
+        <a class="v2-production-card" href="./kids/"><div><small>UNTOZ KIDS</small><h3>Lila & Bobo</h3><p>Small adventures. Big imagination.</p></div><b>↗</b></a>
       </div>`;
     document.getElementById('featured')?.insertAdjacentElement('beforebegin',productions);
 
