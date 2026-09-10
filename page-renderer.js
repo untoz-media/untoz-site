@@ -5,7 +5,7 @@
   const RAW='https://raw.githubusercontent.com/untoz-media/untoz-site/main/content/pages/';
   const themeKey='untoz-theme';
 
-  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]));
   const nl=v=>esc(v).replace(/\n/g,'<br>');
   const safeHref=v=>{const s=String(v||'').trim();return /^(https?:\/\/|mailto:|\/|\.\/|\.\.\/|#)/i.test(s)?s:'#'};
   const safeMedia=v=>{const s=String(v||'').trim();return /^(https?:\/\/|\/|\.\/|\.\.\/)/i.test(s)?s:''};
@@ -15,10 +15,12 @@
   const href=p=>new URL(p,base).href;
 
   function installV2Styles(){
-    if(document.querySelector('link[data-untoz-page-v2]'))return;
-    const link=document.createElement('link');
-    link.rel='stylesheet';link.href=href('page-v2.css');link.dataset.untozPageV2='true';
-    document.head.appendChild(link);
+    ['page-v2.css','page-v2-states.css'].forEach(file=>{
+      if(document.querySelector(`link[data-untoz-page-style="${file}"]`))return;
+      const link=document.createElement('link');
+      link.rel='stylesheet';link.href=href(file);link.dataset.untozPageStyle=file;
+      document.head.appendChild(link);
+    });
   }
   installV2Styles();
 
