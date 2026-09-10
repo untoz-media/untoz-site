@@ -47,6 +47,7 @@ jobs:
           node --check public/admin/command-v2.js
           node --check public/admin/homepage-experience-manager.js
           node --check public/admin/homepage-studio-v2.js
+          node --check public/admin/posts-workspace-v2.js
 
       - name: Production build
         run: npm run build
@@ -125,4 +126,4 @@ jobs:
         if: always()
         run: |
           echo "## Untoz Browser QA" >> "$GITHUB_STEP_SUMMARY"
-          echo "Chromium checks cover the production dist in FHD, QHD, 4K, tablet, mobile, selected dark-mode routes and the authenticated Command V2 shell." >> "$GITHUB_STEP_SUMMARY"
+          echo "Chromium checks cover the production dist in FHD, QHD, 4K, tablet, mobile, selected dark-mode routes, Homepage Studio and the Posts Newsroom/editor." >> "$GITHUB_STEP_SUMMARY"

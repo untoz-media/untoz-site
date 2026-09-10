@@ -121,9 +121,48 @@ for (const viewport of viewports) {
     if (!structure.builderVisible || !structure.sourceClass) failures.push(`${viewport.name}: Structure mode did not reveal the production builder`);
     if (structure.blocks < 1) failures.push(`${viewport.name}: Structure mode has no homepage blocks`);
     if (structure.overflowX > 4) failures.push(`${viewport.name}: Homepage Studio Structure overflow ${structure.overflowX}px`);
-
-    results.push({ viewport: viewport.name, status: response?.status() ?? null, ...metrics, studio, preview, structure });
     await page.screenshot({ path: `${outDir}/${viewport.name}-homepage-studio.png`, fullPage: true });
+
+    await page.locator('.nav [data-view="posts"]').click();
+    await page.locator('[data-posts-workspace-hero]').waitFor({ state: 'visible', timeout: 8000 });
+    await page.waitForTimeout(300);
+    const newsroom = await page.evaluate(() => ({
+      hero: !!document.querySelector('[data-posts-workspace-hero]'),
+      metrics: document.querySelectorAll('.pw-metrics > div').length,
+      statusTabs: document.querySelectorAll('[data-pw-status]').length,
+      rows: document.querySelectorAll('.pw-list-panel tr[data-pw-row]').length,
+      listToolbar: !!document.querySelector('.pw-list-panel .command-list-tools'),
+      overflowX: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+    }));
+    if (!newsroom.hero || newsroom.metrics !== 5) failures.push(`${viewport.name}: Newsroom editorial overview did not render correctly`);
+    if (newsroom.statusTabs !== 4) failures.push(`${viewport.name}: Newsroom rendered ${newsroom.statusTabs} status filters instead of 4`);
+    if (newsroom.rows < 1) failures.push(`${viewport.name}: Newsroom has no annotated story rows`);
+    if (!newsroom.listToolbar) failures.push(`${viewport.name}: Newsroom search/filter toolbar did not mount`);
+    if (newsroom.overflowX > 4) failures.push(`${viewport.name}: Newsroom overflow ${newsroom.overflowX}px`);
+    await page.screenshot({ path: `${outDir}/${viewport.name}-newsroom.png`, fullPage: true });
+
+    const firstPost = page.locator('.pw-list-panel [data-edit-post]').first();
+    await firstPost.click();
+    await page.locator('[data-post-editor2]').waitFor({ state: 'visible', timeout: 8000 });
+    await page.locator('[data-pw-editor-context]').waitFor({ state: 'visible', timeout: 4000 });
+    await page.waitForTimeout(180);
+    const postEditor = await page.evaluate(() => ({
+      context: !!document.querySelector('[data-pw-editor-context]'),
+      editorV2: document.querySelector('[data-post-editor2]')?.classList.contains('pw-editor-v2') || false,
+      headline: !!document.getElementById('p2-title'),
+      richText: !!document.getElementById('p2-content'),
+      publishPanel: !!document.getElementById('p2-status'),
+      seoScore: !!document.getElementById('p2-score'),
+      previewTabs: document.querySelectorAll('[data-preview]').length,
+      overflowX: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+    }));
+    if (!postEditor.context || !postEditor.editorV2) failures.push(`${viewport.name}: Posts editor V2 context/polish did not mount`);
+    if (!postEditor.headline || !postEditor.richText || !postEditor.publishPanel || !postEditor.seoScore) failures.push(`${viewport.name}: core post editor controls are missing`);
+    if (postEditor.previewTabs !== 3) failures.push(`${viewport.name}: post editor has ${postEditor.previewTabs} preview modes instead of 3`);
+    if (postEditor.overflowX > 4) failures.push(`${viewport.name}: post editor overflow ${postEditor.overflowX}px`);
+    await page.screenshot({ path: `${outDir}/${viewport.name}-post-editor.png`, fullPage: true });
+
+    results.push({ viewport: viewport.name, status: response?.status() ?? null, ...metrics, studio, preview, structure, newsroom, postEditor });
   } catch (error) {
     failures.push(`${viewport.name}: ${String(error?.message || error)}`);
   } finally {
@@ -135,7 +174,7 @@ await browser.close();
 await fs.writeFile(`${outDir}/admin-shell-qa.json`, JSON.stringify({ generatedAt: new Date().toISOString(), baseURL, failures, results }, null, 2));
 
 console.log(`Untoz Command V2 QA: ${results.length} viewport checks`);
-for (const result of results) console.log(`  ✓ ${result.viewport}: ${result.navButtons} nav actions, ${result.navLabels} groups, ${result.sessionActions.length} session action(s), studio ${result.studio.tabs} tabs/${result.studio.sections} sections, overflow ${result.overflowX}px`);
+for (const result of results) console.log(`  ✓ ${result.viewport}: studio ${result.studio.tabs} tabs/${result.studio.sections} sections, newsroom ${result.newsroom.rows} stories, editor ${result.postEditor.previewTabs} previews, overflow ${result.overflowX}px`);
 for (const failure of failures) console.error(`  ✖ ${failure}`);
 if (failures.length) process.exit(1);
-console.log('✅ Untoz Command V2 shell + Homepage Studio QA passed.');
+console.log('✅ Untoz Command V2 shell + Homepage Studio + Newsroom QA passed.');
