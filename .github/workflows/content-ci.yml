@@ -13,6 +13,9 @@ on:
       - '.github/workflows/command-api-ci.yml'
   workflow_dispatch:
 
+env:
+  PUBLIC_SITE_BASE: https://untoz-media.github.io/untoz-site
+
 permissions:
   contents: read
 
@@ -70,18 +73,21 @@ jobs:
           npm install --no-save --no-package-lock playwright@1.55.0
           npx playwright install --with-deps chromium
 
-      - name: Start Vite test server
+      - name: Build production preview
+        run: npm run build
+
+      - name: Start production preview
         run: |
-          npm run dev -- --host 127.0.0.1 --port 4173 > /tmp/untoz-vite.log 2>&1 &
-          echo $! > /tmp/untoz-vite.pid
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/untoz-preview.log 2>&1 &
+          echo $! > /tmp/untoz-preview.pid
           for i in {1..30}; do
             if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then
-              echo 'Untoz preview is ready.'
+              echo 'Untoz production preview is ready.'
               exit 0
             fi
             sleep 1
           done
-          cat /tmp/untoz-vite.log
+          cat /tmp/untoz-preview.log
           exit 1
 
       - name: Run browser QA
@@ -90,9 +96,9 @@ jobs:
           UNTOZ_QA_OUT: qa-artifacts
         run: node scripts/browser-qa.mjs
 
-      - name: Show Vite log on failure
+      - name: Show preview log on failure
         if: failure()
-        run: cat /tmp/untoz-vite.log || true
+        run: cat /tmp/untoz-preview.log || true
 
       - name: Upload browser QA report
         if: always()
@@ -107,4 +113,4 @@ jobs:
         if: always()
         run: |
           echo "## Untoz Browser QA" >> "$GITHUB_STEP_SUMMARY"
-          echo "Chromium checks cover FHD, QHD, 4K, tablet, mobile and selected dark-mode routes." >> "$GITHUB_STEP_SUMMARY"
+          echo "Chromium checks cover the production dist in FHD, QHD, 4K, tablet, mobile and selected dark-mode routes." >> "$GITHUB_STEP_SUMMARY"
