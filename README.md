@@ -28,6 +28,9 @@ The website is designed as a modern editorial and media portal while keeping the
 - Responsive desktop and mobile layouts
 - JSON-based content system
 - **Untoz Command** administration panel
+- Homepage V2 experience layer with brand-specific art direction
+- Content-driven homepage manifesto, productions, products, stats and final CTA
+- Reduced-motion aware scroll interactions and microinteractions
 
 ## Untoz Command
 
@@ -43,6 +46,7 @@ The admin panel currently includes:
 - Genres
 - Menus
 - Homepage Builder
+- Homepage Experience editor
 - Design System settings
 - Header and footer settings
 - Site settings
@@ -74,6 +78,8 @@ content/
 └── posts/
 ```
 
+`content/homepage.json` contains the traditional block list used by the Homepage Builder plus the Homepage V2 `experience` configuration for brand rail, manifesto, productions, products, stats and the final brand CTA.
+
 This structure allows Untoz Command and the public website to share the same content source while keeping the project lightweight and compatible with static hosting.
 
 ## Project structure
@@ -88,6 +94,8 @@ untoz-site/
 ├── src/                     # Site source and styles
 ├── index.html               # Public site entrypoint
 ├── static-home.js           # Deploy-safe homepage runtime
+├── home-v2.js               # Homepage V2 layout enhancement layer
+├── home-v2-phase2.js        # Homepage V2 identity/content runtime
 ├── vite.config.js
 └── package.json
 ```
@@ -143,6 +151,8 @@ Current Untoz brand colors:
 
 The portal uses a clean, editorial interface built around the Untoz identity, with a separate reusable **Untoz Global Header** above the site's own navigation.
 
+Homepage V2 expands this system with dedicated visual directions for individual Untoz brands, productions and products while keeping the core Untoz palette as the connecting layer.
+
 ## Related Untoz projects
 
 - **Untoz+** — streaming platform
@@ -152,6 +162,8 @@ The portal uses a clean, editorial interface built around the Untoz identity, wi
 - **Untoz Space** — space coverage
 - **Untoz Kids** — children's content
 - **Untoz Archives** — archive content
+- **AURA-1** — local AI assistant
+- **Untoz Clip** — creator software
 - **Untoz Command** — administration and CMS
 
 ## Status
