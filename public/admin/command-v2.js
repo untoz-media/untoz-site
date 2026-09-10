@@ -20,6 +20,9 @@
       button.dataset.commandIcon=ICONS[id]||'·';
     });
 
+    const signature=buttons.map(viewId).join('|');
+    if(nav.dataset.commandV2Signature===signature)return;
+    nav.dataset.commandV2Signature=signature;
     nav.querySelectorAll(':scope > .command-v2-nav-label').forEach(label=>label.remove());
     GROUPS.forEach(group=>{
       const first=buttons.find(button=>group.views.includes(viewId(button)));
