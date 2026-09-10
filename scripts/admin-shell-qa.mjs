@@ -53,7 +53,7 @@ for (const viewport of viewports) {
         dashboard: !!document.querySelector('[data-command-overview]'),
         navButtons: document.querySelectorAll('.nav [data-view]').length,
         navLabels: document.querySelectorAll('.command-v2-nav-label').length,
-        sessionActions: sessionActions.map(node => node.textContent?.trim() || ''),
+        sessionActions: sessionActions.map(node => ({ kind: node.dataset.commandSession || '', label: node.textContent?.trim() || '' })),
         floatingSessionActions: sessionActions.filter(node => getComputedStyle(node).position === 'fixed').length,
         overflowX: Math.max(root.scrollWidth, body.scrollWidth) - innerWidth,
         fontFamily: getComputedStyle(body).fontFamily,
@@ -71,7 +71,8 @@ for (const viewport of viewports) {
     if (!metrics.sidebar || !metrics.topbar || !metrics.dashboard) failures.push(`${viewport.name}: core admin shell/dashboard did not render`);
     if (metrics.navButtons < 8) failures.push(`${viewport.name}: only ${metrics.navButtons} navigation actions rendered`);
     if (metrics.navLabels < 3) failures.push(`${viewport.name}: navigation groups were not enhanced`);
-    if (!metrics.sessionActions.some(label => label.includes('Sync live'))) failures.push(`${viewport.name}: Sync live was not integrated into the topbar`);
+    if (!metrics.sessionActions.some(action => action.kind === 'sync')) failures.push(`${viewport.name}: Sync action was not integrated into the topbar`);
+    if (!metrics.sessionActions.some(action => action.kind === 'signout')) failures.push(`${viewport.name}: Sign out action was not integrated into the topbar`);
     if (metrics.floatingSessionActions) failures.push(`${viewport.name}: ${metrics.floatingSessionActions} session action(s) are still fixed over content`);
     if (metrics.overflowX > 4) failures.push(`${viewport.name}: horizontal overflow ${metrics.overflowX}px`);
     if (!metrics.fontFamily.toLowerCase().includes('montserrat')) failures.push(`${viewport.name}: Command V2 font stack is ${metrics.fontFamily}`);
