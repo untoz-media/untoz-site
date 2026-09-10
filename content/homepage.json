@@ -1,8 +1,120 @@
 {
-  "version": 1,
+  "version": 2,
   "blocks": [
-    {"id":"hero-1","type":"hero","props":{"title":"Untoz","subtitle":"Media, entertainment and technology.","cta":"Explore Untoz+"}},
-    {"id":"news-1","type":"post-grid","props":{"title":"Latest News","source":"latest","limit":6}},
-    {"id":"plus-1","type":"cta","props":{"title":"Untoz+","subtitle":"Stream movies, series, live TV, sports and events.","button":"Open Untoz+"}}
-  ]
+    {
+      "id": "hero-1",
+      "type": "hero",
+      "props": {
+        "title": "Untoz",
+        "subtitle": "Media, entertainment and technology.",
+        "cta": "Explore Untoz+"
+      }
+    },
+    {
+      "id": "news-1",
+      "type": "post-grid",
+      "props": {
+        "title": "Latest News",
+        "source": "latest",
+        "limit": 6
+      }
+    },
+    {
+      "id": "plus-1",
+      "type": "cta",
+      "props": {
+        "title": "Untoz+",
+        "subtitle": "Stream movies, series, live TV, sports and events.",
+        "button": "Open Untoz+"
+      }
+    }
+  ],
+  "experience": {
+    "manifesto": {
+      "eyebrow": "THIS IS UNTOZ",
+      "title": "Everything we do.",
+      "accent": "For everyone.",
+      "body": "We create stories, products, broadcasts and experiences across entertainment, news, sport and technology — connected by one idea: make media feel exciting again."
+    },
+    "brandRail": [
+      "Untoz+",
+      "Untoz News",
+      "Untoz Sports",
+      "Untoz Gaming",
+      "Untoz Pop",
+      "Untoz Kids",
+      "Untoz Space",
+      "Untoz Archives",
+      "Task Movies",
+      "Oiko"
+    ],
+    "productions": [
+      {
+        "brand": "worldunited",
+        "eyebrow": "LIVE EVENT · AMSTERDAM",
+        "title": "WorldUnited 2026",
+        "tagline": "A WORLD OF SOUND",
+        "url": "https://worldunited.untoz.site/"
+      },
+      {
+        "brand": "awards",
+        "eyebrow": "AWARDS · SYDNEY",
+        "title": "Untoz Awards 2027",
+        "tagline": "CATCH THE LIGHT",
+        "url": "https://awards.untoz.site/"
+      },
+      {
+        "brand": "kids",
+        "eyebrow": "UNTOZ KIDS",
+        "title": "Lila & Bobo",
+        "tagline": "Small adventures. Big imagination.",
+        "url": "./kids/"
+      }
+    ],
+    "products": [
+      {
+        "brand": "aura",
+        "eyebrow": "LOCAL AI ASSISTANT",
+        "title": "AURA-1",
+        "body": "Your computer, finally working with you.",
+        "url": "https://aura.untoz.site/"
+      },
+      {
+        "brand": "clip",
+        "eyebrow": "CREATOR SOFTWARE",
+        "title": "Untoz Clip",
+        "body": "Capture, clip and turn moments into content.",
+        "url": "https://github.com/untoz-media/untoz-clip"
+      },
+      {
+        "brand": "plus",
+        "eyebrow": "STREAMING PLATFORM",
+        "title": "Untoz+",
+        "body": "Entertainment, channels and events in one place.",
+        "url": "https://untozplus.com/"
+      }
+    ],
+    "stats": [
+      {
+        "value": "10+",
+        "label": "brands & projects"
+      },
+      {
+        "value": "24/7",
+        "label": "digital media"
+      },
+      {
+        "value": "∞",
+        "label": "possibilities"
+      }
+    ],
+    "finalCta": {
+      "eyebrow": "UNTOZ",
+      "title": "Media should feel",
+      "accent": "alive.",
+      "body": "Watch it. Read it. Build it. Experience it.",
+      "button": "Explore Untoz →",
+      "url": "#explore"
+    }
+  }
 }
