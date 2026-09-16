@@ -67,7 +67,7 @@ jobs:
           cache: npm
 
       - name: Install site dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build exactly as Hostinger
         env:
