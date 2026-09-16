@@ -1,4 +1,6 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import analytics from '../api/public/analytics.js';
@@ -15,6 +17,10 @@ type ApiHandler = (req: VercelRequest, res: VercelResponse) => unknown | Promise
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
+const moduleDir = dirname(fileURLToPath(import.meta.url));
+const siteDist = process.env.SITE_DIST_DIR
+  ? resolve(process.env.SITE_DIST_DIR)
+  : resolve(moduleDir, '../../../../dist');
 
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
@@ -30,14 +36,6 @@ function adapt(handler: ApiHandler) {
   };
 }
 
-app.get('/', (_req, res) => {
-  res.json({
-    service: 'untoz-command-api',
-    status: 'ok',
-    runtime: 'node',
-  });
-});
-
 app.all('/api/public/analytics', adapt(analytics));
 app.all('/api/public/audit', adapt(audit));
 app.all('/api/public/bootstrap', adapt(bootstrap));
@@ -48,16 +46,30 @@ app.all('/api/public/publish', adapt(publish));
 app.all('/api/public/team', adapt(team));
 app.all('/api/public/upload', adapt(upload));
 
+app.use('/api', (_req, res) => {
+  res.status(404).json({ error: 'API route not found' });
+});
+
+app.use(express.static(siteDist, { extensions: ['html'], index: 'index.html' }));
+
+app.use((req, res, next) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+  res.status(404).sendFile(join(siteDist, '404.html'), error => {
+    if (error) next(error);
+  });
+});
+
 app.use((_req, res) => {
   res.status(404).json({ error: 'Not found' });
 });
 
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  console.error('[untoz-command-api]', error);
+  console.error('[untoz]', error);
   if (res.headersSent) return;
   res.status(500).json({ error: 'Internal server error' });
 });
 
 app.listen(port, '0.0.0.0', () => {
-  console.log(`Untoz Command API listening on port ${port}`);
+  console.log(`Untoz running on port ${port}`);
+  console.log(`Serving public site from ${siteDist}`);
 });
