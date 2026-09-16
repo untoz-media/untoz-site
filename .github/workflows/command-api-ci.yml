@@ -5,17 +5,21 @@ on:
     branches: [main]
     paths:
       - 'backend/untoz-command-api/**'
+      - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/command-api-ci.yml'
   pull_request:
     paths:
       - 'backend/untoz-command-api/**'
+      - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/command-api-ci.yml'
 
 permissions:
   contents: read
 
 jobs:
-  typecheck:
+  api-checks:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -28,8 +32,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: backend/untoz-command-api/package.json
 
       - name: Install dependencies
         run: npm install
@@ -40,6 +42,9 @@ jobs:
           set -o pipefail
           npm run typecheck 2>&1 | tee typecheck.log
 
+      - name: Build API
+        run: npm run build
+
       - name: Upload TypeScript diagnostics
         if: failure()
         uses: actions/upload-artifact@v4
@@ -48,3 +53,23 @@ jobs:
           path: backend/untoz-command-api/typecheck.log
           if-no-files-found: ignore
           retention-days: 7
+
+  hostinger-production-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install site dependencies
+        run: npm install
+
+      - name: Build exactly as Hostinger
+        env:
+          PUBLIC_SITE_BASE: https://untoz.site
+        run: npm run build

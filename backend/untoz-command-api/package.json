@@ -1,18 +1,25 @@
 {
   "name": "untoz-command-api",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/server.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
     "@vercel/node": "^5.3.24",
+    "express": "^5.1.0",
     "jose": "^6.1.0",
     "zod": "^4.1.5"
   },
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "@types/node": "^22.15.0",
     "typescript": "^5.9.2"
   }
