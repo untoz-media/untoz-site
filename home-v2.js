@@ -32,7 +32,7 @@
     const explore=document.getElementById('explore');
     if(explore){
       explore.classList.add('v2-network');
-      const h=explore.querySelector('.section-title h2'); if(h)h.textContent='UNTOZ BRANDS';
+      const h=explore.querySelector('.section-title h2'); if(h)h.textContent='Untoz Brands';
       const a=explore.querySelector('.section-title a'); if(a)a.textContent='Explore the universe ↗';
       explore.querySelectorAll('.explore-card').forEach((card,i)=>{card.classList.add('v2-network-card');card.insertAdjacentHTML('afterbegin',`<small>0${i+1}</small>`)});
     }
@@ -41,7 +41,7 @@
     productions.className='section v2-productions';
     productions.id='productions';
     productions.innerHTML=`
-      <div class="v2-section-head"><div><h2>FEATURED PRODUCTIONS</h2></div><a class="v2-section-action" href="#universe">View all productions →</a></div>
+      <div class="v2-section-head"><div><h2>Featured Productions</h2></div><a class="v2-section-action" href="#universe">View all productions →</a></div>
       <div class="v2-production-grid">
         <a class="v2-production-card v2-production-wide" href="https://worldunited.untoz.site/"><div><small>LIVE EVENT · AMSTERDAM</small><h3>WorldUnited 2026</h3><p>A WORLD OF SOUND</p></div><b>↗</b></a>
         <a class="v2-production-card" href="https://awards.untoz.site/"><div><small>AWARDS · SYDNEY</small><h3>Untoz Awards 2027</h3><p>CATCH THE LIGHT</p></div><b>↗</b></a>
@@ -54,7 +54,7 @@
     products.id='products';
     products.innerHTML=`
       <div class="v2-products-head">
-        <div class="v2-products-intro"><h2>UNTOZ PRODUCTS</h2><p>Technology built around the way Untoz creates, publishes and entertains.</p></div>
+        <div class="v2-products-intro"><h2>Untoz Products</h2><p>Technology built around the way Untoz creates, publishes and entertains.</p></div>
         <a class="v2-section-action" href="#universe">View all products →</a>
       </div>
       <div class="v2-product-list">
