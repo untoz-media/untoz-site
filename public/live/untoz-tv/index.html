@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080b10">
+  <meta name="description" content="Watch the Untoz TV live stream.">
+  <meta property="og:type" content="video.other">
+  <meta property="og:site_name" content="Untoz TV">
+  <meta property="og:title" content="Untoz TV — Live">
+  <meta property="og:description" content="Watch Untoz TV live.">
+  <link rel="canonical" href="https://untoz.com/live/untoz-tv/">
+  <link rel="stylesheet" href="../assets/live.css">
+  <title>Untoz TV — Live</title>
+</head>
+<body data-page="channel">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/live/" aria-label="Untoz Live">untoz<span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span></a>
+      <a class="header-live" href="/live/"><span class="status-dot off"></span> ALL CHANNELS</a>
+    </div>
+  </header>
+
+  <main class="container player-page">
+    <a class="back-link" href="/live/">← BACK TO LIVE GUIDE</a>
+    <div class="player-title">
+      <div>
+        <div class="eyebrow">CHANNEL 01 · UNTOZ BROADCAST NETWORK</div>
+        <h1>Untoz TV<span style="color:var(--green)">.</span></h1>
+        <p>Your universe. Live.</p>
+      </div>
+      <span class="channel-status"><span class="status-dot off"></span> LIVE CHANNEL</span>
+    </div>
+
+    <section class="player-shell" aria-label="Untoz TV live video player">
+      <video id="live-video" controls playsinline autoplay muted preload="none" aria-label="Untoz TV live stream"></video>
+      <div class="player-overlay" id="player-overlay">
+        <strong id="player-overlay-title">A ligar à Untoz TV…</strong>
+        <p id="player-overlay-text">A preparar a transmissão em direto.</p>
+        <button class="player-action" id="player-action" type="button">Ver em direto</button>
+      </div>
+    </section>
+    <div class="player-meta">
+      <span><strong>UNTOZ TV</strong> · Transmissão em direto</span>
+      <span id="player-state" aria-live="polite">A iniciar o player…</span>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="footer-inner"><span>© 2026 Untoz. All rights reserved.</span><span>Informar, emocionar e conectar pessoas.</span></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+  <script src="../assets/live.js"></script>
+</body>
+</html>
