@@ -2,7 +2,30 @@
   const STREAM_URL = 'https://stream.untoz.com/untoz/index.m3u8';
   const channelPage = document.body.dataset.page === 'channel';
 
-  if (!channelPage) return;
+  if (!channelPage) {
+    const status = document.getElementById('channel-status');
+    if (status) {
+      const updateStatus = async () => {
+        try {
+          const response = await fetch(STREAM_URL, { cache: 'no-store' });
+          const playlist = response.ok ? await response.text() : '';
+          const isLive = response.ok && playlist.trimStart().startsWith('#EXTM3U');
+          const dot = status.querySelector('.status-dot');
+          if (dot) dot.classList.toggle('off', !isLive);
+          status.setAttribute('aria-label', isLive ? 'Untoz TV is live' : 'Untoz TV is off air');
+          status.lastChild.textContent = isLive ? ' LIVE' : ' OFF AIR';
+        } catch {
+          const dot = status.querySelector('.status-dot');
+          if (dot) dot.classList.add('off');
+          status.setAttribute('aria-label', 'Untoz TV status unavailable');
+          status.lastChild.textContent = ' OFF AIR';
+        }
+      };
+      updateStatus();
+      window.setInterval(updateStatus, 20000);
+    }
+    return;
+  }
 
   const video = document.getElementById('live-video');
   const overlay = document.getElementById('player-overlay');
