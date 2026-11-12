@@ -73,3 +73,24 @@ h1{font-size:clamp(42px,7vw,76px);line-height:.98;letter-spacing:-.065em;margin:
 .player-error{color:#ff9ba7}
 @media(max-width:760px){.header-inner,.container,.footer-inner{width:calc(100% - 32px)}.site-header{height:66px}.header-nav{display:none}main{padding:45px 0 65px}.channel-grid{grid-template-columns:1fr;margin-top:30px}.channel-card{min-height:260px;padding:23px}.side-note{min-height:190px}.schedule{margin-top:50px}.programme{grid-template-columns:72px minmax(0,1fr);gap:10px;padding:15px 10px}.programme-tag{grid-column:2;justify-self:start}.section-heading{align-items:flex-start;flex-direction:column;gap:7px}.player-page{padding-top:22px}.player-title{align-items:flex-start;flex-direction:column}.player-shell{min-height:220px;max-height:none;border-radius:12px}.player-meta{align-items:flex-start;flex-direction:column;gap:7px}.footer-inner{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+
+/* Untoz live player — custom controls adapted from the Untoz+ player */
+.player-shell{isolation:isolate}
+.player-shell video{position:absolute;inset:0}
+.utp-topbar{position:absolute;z-index:3;top:16px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.utp-live,.utp-live-label{display:inline-flex;align-items:center;gap:8px;background:rgba(0,0,0,.68);padding:7px 11px;border-radius:7px;color:#fff;font-size:10px;font-weight:900;letter-spacing:.12em}
+.utp-live i,.utp-live-label i{width:7px;height:7px;border-radius:50%;background:#ff304f;box-shadow:0 0 10px #ff304f}
+.utp-channel{font-size:10px;font-weight:900;letter-spacing:.16em;color:#fff;text-shadow:0 1px 5px #000}
+.utp-center{position:absolute;inset:0;z-index:2;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.utp-center.visible{opacity:1;pointer-events:auto}
+.utp-center button{width:76px;height:76px;border:0;border-radius:50%;background:linear-gradient(135deg,#0031ff,#593ceb);color:white;font-size:28px;cursor:pointer;box-shadow:0 12px 40px #0031ff55}
+.utp-controls{position:absolute;z-index:4;left:0;right:0;bottom:0;padding:34px 18px 14px;background:linear-gradient(transparent,rgba(0,0,0,.92));color:#fff}
+.utp-progress{height:3px;background:#ffffff38;border-radius:9px;margin-bottom:12px;overflow:hidden}
+.utp-progress span{display:block;width:100%;height:100%;background:#ff304f}
+.utp-control-row{display:flex;align-items:center;gap:12px}
+.utp-control-row button{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:5px}
+.utp-control-row input{width:76px;accent-color:#593ceb}
+.utp-live-label{background:transparent;padding:0;font-size:9px}
+.utp-spacer{flex:1}
+.utp-control-row select{max-width:120px;background:#17191f;color:#fff;border:1px solid #ffffff30;border-radius:6px;padding:7px;font-size:10px}
+@media(max-width:600px){.utp-controls{padding:26px 10px 9px}.utp-control-row{gap:7px}.utp-control-row input{width:52px}.utp-live-label{font-size:8px}.utp-topbar{top:10px;left:10px;right:10px}}
