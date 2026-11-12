@@ -33,7 +33,21 @@
     </div>
 
     <section class="player-shell" aria-label="Untoz TV live video player">
-      <video id="live-video" controls playsinline autoplay muted preload="none" aria-label="Untoz TV live stream"></video>
+      <video id="live-video" playsinline autoplay muted preload="none" aria-label="Untoz TV live stream"></video>
+      <div class="utp-topbar"><span class="utp-live"><i></i> LIVE</span><span class="utp-channel">UNTOZ TV</span></div>
+      <div class="utp-center" id="utp-center"><button id="utp-big-play" aria-label="Reproduzir">▶</button></div>
+      <div class="utp-controls" id="utp-controls">
+        <div class="utp-progress"><span id="utp-progress-fill"></span></div>
+        <div class="utp-control-row">
+          <button id="utp-play" aria-label="Reproduzir">▶</button>
+          <button id="utp-mute" aria-label="Silenciar">🔊</button>
+          <input id="utp-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+          <span class="utp-live-label"><i></i> EM DIRETO</span>
+          <div class="utp-spacer"></div>
+          <select id="utp-quality" aria-label="Qualidade"><option value="-1">Automática</option></select>
+          <button id="utp-fullscreen" aria-label="Ecrã inteiro">⛶</button>
+        </div>
+      </div>
       <div class="player-overlay" id="player-overlay">
         <strong id="player-overlay-title">A ligar à Untoz TV…</strong>
         <p id="player-overlay-text">A preparar a transmissão em direto.</p>
